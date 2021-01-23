@@ -1,6 +1,7 @@
 package com.pagebook.user.dto;
 
 public class RequestDetails {
+    private int requestId;
     private String userId;
 
     private String userName;
@@ -33,6 +34,14 @@ public class RequestDetails {
 
     public int getStatus() {
         return status;
+    }
+
+    public int getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
     }
 
     public void setStatus(int status) {
