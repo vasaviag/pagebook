@@ -4,22 +4,20 @@ import com.pagebook.pcr.entity.Comment;
 
 import java.util.List;
 
-public class ParentAndChildComment {
+public class CommentDTO {
     private int commentId; // (Pk) (Auto Generated)
     private int postId;
-    private int userId;
+    private User user;
     private String commentText;
-    List<Comment> comments;
 
-    public ParentAndChildComment() {
+    public CommentDTO() {
     }
 
-    public ParentAndChildComment(int commentId, int postId, int userId, String commentText, List<Comment> comments) {
+    public CommentDTO(int commentId, int postId, User user, String commentText) {
         this.commentId = commentId;
         this.postId = postId;
-        this.userId = userId;
+        this.user = user;
         this.commentText = commentText;
-        this.comments = comments;
     }
 
     public int getCommentId() {
@@ -38,12 +36,12 @@ public class ParentAndChildComment {
         this.postId = postId;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getCommentText() {
@@ -52,13 +50,5 @@ public class ParentAndChildComment {
 
     public void setCommentText(String commentText) {
         this.commentText = commentText;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 }

@@ -1,16 +1,10 @@
-package com.pagebook.pcr.entity;
+package com.pagebook.pcr.dto;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "posts")
-
-public class Post {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class PostDTO {
     private int postId; // (Pk) (Auto Generated)
-    private String userId;
+    private User user;
     private String postText;
     private String postUrl;
     private int postType; // [ 1 -> text, 2 -> image, 3 -> video ]
@@ -18,12 +12,12 @@ public class Post {
     private Date timestamp;
     private int sharedPostId;
 
-    public Post() {
+    public PostDTO() {
     }
 
-    public Post(int postId, String userId, String postText, String postUrl, int postType, String postCategory, Date timestamp, int sharedPostId) {
+    public PostDTO(int postId, User user, String postText, String postUrl, int postType, String postCategory, Date timestamp, int sharedPostId) {
         this.postId = postId;
-        this.userId = userId;
+        this.user = user;
         this.postText = postText;
         this.postUrl = postUrl;
         this.postType = postType;
@@ -40,12 +34,12 @@ public class Post {
         this.postId = postId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getPostText() {

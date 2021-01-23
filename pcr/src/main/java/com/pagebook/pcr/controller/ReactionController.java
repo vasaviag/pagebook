@@ -1,6 +1,7 @@
 package com.pagebook.pcr.controller;
 
-import com.pagebook.pcr.dto.Reactions;
+import com.pagebook.pcr.dto.ReactionDetails;
+import com.pagebook.pcr.dto.ReactionsDTO;
 import com.pagebook.pcr.entity.ReactionOnPosts;
 import com.pagebook.pcr.services.IReactionServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping(value = "/reaction")
+@RequestMapping(value = "pb/reaction")
 public class ReactionController {
     @Autowired
     IReactionServices iReactionServices;
@@ -40,8 +41,14 @@ public class ReactionController {
     }
 
     @GetMapping(value = "/getReactions/{postId}")
-    List<Reactions> getPostReactions(@PathVariable("postId") int postId)
+    List<ReactionsDTO> getPostReactions(@PathVariable("postId") int postId)
     {
         return iReactionServices.findByPostId(postId);
+    }
+
+    @GetMapping(value = "/getReactionDetails/{postId}/{reactionType}")
+    List<ReactionDetails> getPostReactionDetails(@PathVariable("postId") int postId, @PathVariable("reactionType") int reactionType)
+    {
+        return iReactionServices.findByPostIdAndReactionType(postId, reactionType);
     }
 }

@@ -1,5 +1,7 @@
 package com.pagebook.pcr.controller;
 
+import com.pagebook.pcr.dto.PostDTO;
+import com.pagebook.pcr.dto.PostDetails;
 import com.pagebook.pcr.entity.Post;
 import com.pagebook.pcr.services.IPostServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping (value = "/post")
+@RequestMapping (value = "pb/post")
 public class PostController {
 
     @Autowired
@@ -39,9 +41,15 @@ public class PostController {
         return iPostServices.findPostsByUserId(userId);
     }
 
-    @GetMapping(value = "/getPost/{postId}")
-    Post getPost(@PathVariable("postId") int postId)
+    @GetMapping(value = "/getPostDetails/{postId}")
+    PostDetails getPostDetails(@PathVariable("postId") int postId)
     {
-        return iPostServices.findById(postId);
+        return iPostServices.findByPostId(postId);
+    }
+
+    @GetMapping(value = "/getFriendPosts/{userId}")
+    List<PostDTO> getFriendPosts(@PathVariable("userId") String userId)
+    {
+        return iPostServices.findFriendPosts(userId);
     }
 }

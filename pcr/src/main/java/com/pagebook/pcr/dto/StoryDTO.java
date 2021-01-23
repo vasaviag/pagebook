@@ -1,25 +1,20 @@
-package com.pagebook.pcr.entity;
+package com.pagebook.pcr.dto;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "story")
-public class Story {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class StoryDTO {
+
     private int storyId; //(Pk) (Auto Generated)
-    private String userId;
+    private User user;
     private String storyUrl;
     private Date timestamp;
 
-    public Story() {
-        
+    public StoryDTO() {
     }
 
-    public Story(int storyId, String userId, String storyUrl, Date timestamp) {
+    public StoryDTO(int storyId, User user, String storyUrl, Date timestamp) {
         this.storyId = storyId;
-        this.userId = userId;
+        this.user = user;
         this.storyUrl = storyUrl;
         this.timestamp = timestamp;
     }
@@ -32,12 +27,12 @@ public class Story {
         this.storyId = storyId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getStoryUrl() {

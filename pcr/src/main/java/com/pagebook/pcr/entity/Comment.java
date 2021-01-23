@@ -1,6 +1,7 @@
 package com.pagebook.pcr.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "comments")
@@ -14,16 +15,18 @@ public class Comment {
     private int userId;
     private String commentText;
     private int parentCommentId;
+    private Date timestamp;
 
     public Comment() {
     }
 
-    public Comment(int commentId, int postId, int userId, String commentText, int parentCommentId) {
+    public Comment(int commentId, int postId, int userId, String commentText, int parentCommentId, Date timestamp) {
         this.commentId = commentId;
         this.postId = postId;
         this.userId = userId;
         this.commentText = commentText;
         this.parentCommentId = parentCommentId;
+        this.timestamp = timestamp;
     }
 
     public int getCommentId() {

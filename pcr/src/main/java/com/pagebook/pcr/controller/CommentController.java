@@ -1,6 +1,6 @@
 package com.pagebook.pcr.controller;
 
-import com.pagebook.pcr.dto.ParentAndChildComment;
+import com.pagebook.pcr.dto.ParentAndChildCommentDTO;
 import com.pagebook.pcr.entity.Comment;
 import com.pagebook.pcr.services.ICommentServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping(value = "/comment")
+@RequestMapping(value = "pb/comment")
 public class CommentController {
     @Autowired
     ICommentServices iCommentServices;
@@ -40,7 +40,7 @@ public class CommentController {
     }
 
     @GetMapping(value = "/getComments/{postId}")
-    List<ParentAndChildComment> getPostComments(@PathVariable("postId") int postId)
+    List<ParentAndChildCommentDTO> getPostComments(@PathVariable("postId") int postId)
     {
         return iCommentServices.findByPostId(postId);
     }

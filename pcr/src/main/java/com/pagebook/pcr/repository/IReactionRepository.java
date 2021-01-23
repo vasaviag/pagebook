@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface IReactionRepository extends CrudRepository<ReactionOnPosts, Integer> {
-    List<ReactionOnPosts> findByPostIdAndReactionType(Integer postId, Integer reactionType);
+    List<ReactionOnPosts> findByPostIdAndReactionType(int postId, int reactionType);
 }
