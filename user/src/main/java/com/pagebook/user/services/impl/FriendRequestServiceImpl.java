@@ -81,7 +81,7 @@ public class FriendRequestServiceImpl implements IFriendRequestService {
         for(FriendRequest friendRequest:friendRequestList) {
             RequestDetails requestDetails = new RequestDetails();
             if(friendRequest.getStatus()==2){
-                User user = iUserRepository.findByUserId(friendRequest.getSenderId());
+                User user = iUserRepository.findById(friendRequest.getSenderId()).get();
                 requestDetails.setRequestId(friendRequest.getRequestId());
                 requestDetails.setProfileImage(user.getProfileImage());
                 requestDetails.setStatus(friendRequest.getStatus());

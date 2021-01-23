@@ -46,6 +46,17 @@ public class Controller {
         return iUserService.findAll();
     }
 
+    @GetMapping(value = "/getUserInfo/{userId}")
+    User getUserInfo(@PathVariable("userId") String userId){
+        return iUserService.getUserInfo(userId);
+    }
+
+
+    @PostMapping(value = "/userDetailsList")
+    public List<User> userDetailsList(@RequestBody List<String> userIdList){
+        return iUserService.userDetailsList(userIdList);
+    }
+
 
     @PostMapping(value = "/addFriendRequest")
     public FriendRequest addFriendRequest(@RequestBody FriendRequest friendRequest){
@@ -104,11 +115,6 @@ public class Controller {
     public List<User> allModerators(@PathVariable("userId") String userId){
         return iModeratorMapperService.allModerators(userId);
     }
-
-
-
-
-
 
 
 }

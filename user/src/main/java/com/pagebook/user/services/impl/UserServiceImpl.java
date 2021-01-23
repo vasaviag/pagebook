@@ -25,4 +25,18 @@ public class UserServiceImpl implements IUserService {
         userIterable.forEach(userList::add);
         return userList;
     }
+
+    @Override
+    public User getUserInfo(String userId) {
+        return iUserRepository.findById(userId).get();
+    }
+
+    @Override
+    public List<User> userDetailsList(List<String> userIdList) {
+
+        Iterable<User> userIterable = iUserRepository.findByUserIdIn(userIdList);
+        List<User> userDetailsList = new ArrayList<>();
+        userIterable.forEach(userDetailsList::add);
+        return userDetailsList;
+    }
 }

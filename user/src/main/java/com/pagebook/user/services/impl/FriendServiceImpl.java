@@ -46,7 +46,7 @@ public class FriendServiceImpl implements IFriendService {
         List<FriendDetails> friendDetailsList = new ArrayList<>();
         for (Friend friend : friendList) {
             FriendDetails friendDetails = new FriendDetails();
-            User user = iUserRepository.findByUserId(friend.getFriendUserId());
+            User user = iUserRepository.findById(friend.getFriendUserId()).get();
             friendDetails.setProfileImage(user.getProfileImage());
             friendDetails.setUserId(user.getUserId());
             friendDetails.setUserName(user.getUserName());
@@ -82,7 +82,7 @@ public class FriendServiceImpl implements IFriendService {
 
         List<FriendDetails> mayKnowFriendsList = new ArrayList<>();
         for(int i=0;i<mayKnowFriendsId.size();i++){
-            User user = iUserRepository.findByUserId(mayKnowFriendsId.get(i));
+            User user = iUserRepository.findById(mayKnowFriendsId.get(i)).get();
             FriendDetails friendDetails = new FriendDetails();
             friendDetails.setProfileImage(user.getProfileImage());
             friendDetails.setUserId(user.getUserId());

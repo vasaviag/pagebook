@@ -30,7 +30,7 @@ public class ModeratorMapperServiceImpl implements IModeratorMapperService {
 
         List<User> userList = new ArrayList<>();
         for (ModeratorMapper moderatorMapper : moderatorMapperList) {
-            User user = iUserRepository.findByUserId(moderatorMapper.getBusinessId());
+            User user = iUserRepository.findById(moderatorMapper.getBusinessId()).get();
             userList.add(user);
         }
         return userList;
@@ -44,7 +44,7 @@ public class ModeratorMapperServiceImpl implements IModeratorMapperService {
 
         List<User> userList = new ArrayList<>();
         for (ModeratorMapper moderatorMapper : moderatorMapperList) {
-            User user = iUserRepository.findByUserId(moderatorMapper.getModeratorId());
+            User user = iUserRepository.findById(moderatorMapper.getModeratorId()).get();
             userList.add(user);
         }
         return userList;
