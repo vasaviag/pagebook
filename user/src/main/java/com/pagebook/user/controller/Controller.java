@@ -14,6 +14,7 @@ import com.pagebook.user.services.IModeratorMapperService;
 import com.pagebook.user.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -94,9 +95,14 @@ public class Controller {
         return iFriendService.isFriend(userId, friendUserId);
     }
 
-    @GetMapping(value= "isModerator/{moderatorId}/{businessId}")
-    public boolean isModerator(@PathVariable("moderatorId")String moderatorId,@PathVariable("businessId")String businessId){
-        return iModeratorMapperService.isModerator(moderatorId, businessId);
+    @GetMapping(value= "isModeratorFor/{moderatorId}/{businessId}")
+    public boolean isModeratorFor(@PathVariable("moderatorId")String moderatorId,@PathVariable("businessId")String businessId){
+        return iModeratorMapperService.isModeratorFor(moderatorId, businessId);
+    }
+
+    @GetMapping(value= "isModerator/{moderatorId}")
+    public boolean isModerator(@PathVariable("moderatorId")String moderatorId){
+        return iModeratorMapperService.isModerator(moderatorId);
     }
 
     @GetMapping(value = "/youMayKnow/{userId}")
@@ -118,6 +124,13 @@ public class Controller {
     @PostMapping(value = "/addModerator")
     public ModeratorMapper addmoderator(@RequestBody ModeratorMapper moderatorMapper){
         return iModeratorMapperService.save(moderatorMapper);
+
+    }
+
+    @Transactional
+    @DeleteMapping(value = "/removeModerator")
+    public void deletemoderator(@RequestBody ModeratorMapper moderatorMapper){
+        iModeratorMapperService.deleteModerator(moderatorMapper);
 
     }
 

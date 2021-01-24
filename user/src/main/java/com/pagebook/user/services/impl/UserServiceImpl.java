@@ -1,11 +1,14 @@
 package com.pagebook.user.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pagebook.user.entity.User;
 import com.pagebook.user.repository.IUserRepository;
 import com.pagebook.user.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +16,21 @@ import java.util.List;
 public class UserServiceImpl implements IUserService {
     @Autowired
     IUserRepository iUserRepository;
+    @Autowired
+    KafkaTemplate kafkaTemplate;
     @Override
-    public User save(User user) {
+    public User save(User user)  {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String userString="";
+        try {
+            userString = objectMapper.writeValueAsString(user);
+        }catch (Exception e)
+        {
+            System.out.println(e.toString());
+        }
+
+        kafkaTemplate.send("newuser",userString);
         return iUserRepository.save(user);
     }
 

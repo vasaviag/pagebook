@@ -12,4 +12,6 @@ public interface IModeratorMapperRepository extends CrudRepository<ModeratorMapp
 
     @Query(value = "select true from moderatormapper where moderator_id=:moderatorId AND business_id=:businessId", nativeQuery = true)
     boolean isModerator(@Param("moderatorId") String moderatorId,@Param("businessId") String businessId);
+
+    void deleteByBusinessIdAndModeratorId(String businessId,String moderatorId);
 }

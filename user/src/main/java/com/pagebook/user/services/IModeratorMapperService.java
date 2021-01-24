@@ -12,5 +12,9 @@ public interface IModeratorMapperService {
 
     List<User> allModerators(String userId);
 
-    boolean isModerator(String moderatorId, String businessId);
+    boolean isModeratorFor(String moderatorId, String businessId);
+
+    void deleteModerator(ModeratorMapper moderatorMapper);
+
+    boolean isModerator(String moderatorId);
 }

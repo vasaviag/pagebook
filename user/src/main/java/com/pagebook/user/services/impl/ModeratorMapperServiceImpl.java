@@ -7,6 +7,7 @@ import com.pagebook.user.services.IModeratorMapperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.jws.WebParam;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +24,22 @@ public class ModeratorMapperServiceImpl implements IModeratorMapperService {
     }
 
     @Override
-    public boolean isModerator(String moderatorId, String businessId) {
+    public boolean isModeratorFor(String moderatorId, String businessId) {
         try{
             return iModeratorMapperRepository.isModerator(moderatorId, businessId);
         }
         catch (Exception e){
             return false;
         }
+    }
+    @Override
+    public boolean isModerator(String moderatorId) {
+        Iterable<ModeratorMapper> iterable = iModeratorMapperRepository.findByModeratorId(moderatorId);
+        List<ModeratorMapper> moderatorMappers = new ArrayList<>();
+        for (ModeratorMapper moderatorMapper : iterable) {
+            moderatorMappers.add(moderatorMapper);
+        }
+        return (moderatorMappers.size()>0)?true:false;
     }
 
     @Override
@@ -58,5 +68,12 @@ public class ModeratorMapperServiceImpl implements IModeratorMapperService {
             userList.add(user);
         }
         return userList;
+    }
+
+    @Override
+    public void deleteModerator(ModeratorMapper moderatorMapper) {
+        String businessId = moderatorMapper.getBusinessId();
+        String moderatorId = moderatorMapper.getModeratorId();
+        iModeratorMapperRepository.deleteByBusinessIdAndModeratorId(businessId, moderatorId);
     }
 }
