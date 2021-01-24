@@ -1,24 +1,17 @@
 package com.pagebook.pcr.dto;
 
 import java.util.Date;
+import java.util.List;
 
 public class StoryDTO {
 
     private int storyId; //(Pk) (Auto Generated)
-    private User user;
+    private UserDTO userDTO;
+    //todo : phani : support multiple images - (Done)
     private String storyUrl;
     private Date timestamp;
 
-    public StoryDTO() {
-    }
-
-    public StoryDTO(int storyId, User user, String storyUrl, Date timestamp) {
-        this.storyId = storyId;
-        this.user = user;
-        this.storyUrl = storyUrl;
-        this.timestamp = timestamp;
-    }
-
+    
     public int getStoryId() {
         return storyId;
     }
@@ -27,12 +20,12 @@ public class StoryDTO {
         this.storyId = storyId;
     }
 
-    public User getUser() {
-        return user;
+    public UserDTO getUserDTO() {
+        return userDTO;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserDTO(UserDTO userDTO) {
+        this.userDTO = userDTO;
     }
 
     public String getStoryUrl() {

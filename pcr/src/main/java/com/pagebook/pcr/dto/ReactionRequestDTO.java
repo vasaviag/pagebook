@@ -1,24 +1,10 @@
-package com.pagebook.pcr.entity;
+package com.pagebook.pcr.dto;
 
-import javax.persistence.*;
+public class ReactionRequestDTO {
 
-@Entity
-@Table(name = "reactions")
-public class ReactionOnPosts {
-    @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    private int reactionId; // (Primary Key)
     private int postId;
     private String userId;
-    private int reactionType; // [ 1 -> like, 2 -> dislike, 3 -> angry, 4 -> heart emoji ]
-
-    public int getReactionId() {
-        return reactionId;
-    }
-
-    public void setReactionId(int reactionId) {
-        this.reactionId = reactionId;
-    }
+    private int reactionType;
 
     public int getPostId() {
         return postId;

@@ -18,20 +18,6 @@ public class Post {
     private Date timestamp;
     private int sharedPostId;
 
-    public Post() {
-    }
-
-    public Post(int postId, String userId, String postText, String postUrl, int postType, String postCategory, Date timestamp, int sharedPostId) {
-        this.postId = postId;
-        this.userId = userId;
-        this.postText = postText;
-        this.postUrl = postUrl;
-        this.postType = postType;
-        this.postCategory = postCategory;
-        this.timestamp = timestamp;
-        this.sharedPostId = sharedPostId;
-    }
-
     public int getPostId() {
         return postId;
     }

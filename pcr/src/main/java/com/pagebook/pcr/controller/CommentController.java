@@ -1,5 +1,6 @@
 package com.pagebook.pcr.controller;
 
+import com.pagebook.pcr.dto.CommentRequestDTO;
 import com.pagebook.pcr.dto.ParentAndChildCommentDTO;
 import com.pagebook.pcr.entity.Comment;
 import com.pagebook.pcr.services.ICommentServices;
@@ -11,18 +12,19 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(value = "pb/comment")
+//todo  : phani : take input as DTO and convert into entities if required to be saved or updated or deleted
 public class CommentController {
     @Autowired
     ICommentServices iCommentServices;
 
     @PostMapping(value = "/addComment")
-    Comment addComment(@RequestBody Comment comment)
+    Comment addComment(@RequestBody CommentRequestDTO comment)
     {
         return iCommentServices.save(comment);
     }
 
     @PostMapping(value = "/updateComment")
-    Comment updateComment(@RequestBody Comment comment)
+    Comment updateComment(@RequestBody CommentRequestDTO comment)
     {
         return iCommentServices.save(comment);
     }

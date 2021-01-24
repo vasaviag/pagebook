@@ -3,19 +3,10 @@ package com.pagebook.pcr.dto;
 import java.util.Date;
 import java.util.List;
 
-public class PostDetails {
+public class PostDetailsDTO {
     private PostDTO postDTO;
     private List<ParentAndChildCommentDTO> parentAndChildCommentDTO;
     private List<ReactionsDTO> reactionsDTOS;
-
-    public PostDetails() {
-    }
-
-    public PostDetails(PostDTO postDTO, List<ParentAndChildCommentDTO> parentAndChildCommentDTO, List<ReactionsDTO> reactionsDTOS) {
-        this.postDTO = postDTO;
-        this.parentAndChildCommentDTO = parentAndChildCommentDTO;
-        this.reactionsDTOS = reactionsDTOS;
-    }
 
     public PostDTO getPostDTO() {
         return postDTO;

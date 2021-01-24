@@ -1,7 +1,8 @@
 package com.pagebook.pcr.controller;
 
 import com.pagebook.pcr.dto.PostDTO;
-import com.pagebook.pcr.dto.PostDetails;
+import com.pagebook.pcr.dto.PostDetailsDTO;
+import com.pagebook.pcr.dto.PostRequestDTO;
 import com.pagebook.pcr.entity.Post;
 import com.pagebook.pcr.services.IPostServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,15 @@ public class PostController {
     IPostServices iPostServices;
 
     @PostMapping(value = "/addPost")
-    Post addPost(@RequestBody Post post)
+    Post addPost(@RequestBody PostRequestDTO postRequestDTO)
     {
-        return iPostServices.save(post);
+        return iPostServices.save(postRequestDTO);
     }
 
     @PostMapping(value = "/updatePost")
-    Post updatePost(@RequestBody Post post)
+    Post updatePost(@RequestBody PostRequestDTO postRequestDTO)
     {
-        return iPostServices.save(post);
+        return iPostServices.save(postRequestDTO);
     }
 
     @DeleteMapping(value = "/deletePost/{postId}")
@@ -42,7 +43,7 @@ public class PostController {
     }
 
     @GetMapping(value = "/getPostDetails/{postId}")
-    PostDetails getPostDetails(@PathVariable("postId") int postId)
+    PostDetailsDTO getPostDetails(@PathVariable("postId") int postId)
     {
         return iPostServices.findByPostId(postId);
     }

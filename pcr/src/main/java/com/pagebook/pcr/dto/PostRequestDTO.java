@@ -2,9 +2,9 @@ package com.pagebook.pcr.dto;
 
 import java.util.Date;
 
-public class PostDTO {
-    private int postId; // (Pk) (Auto Generated)
-    private UserDTO userDTO;
+public class PostRequestDTO {
+
+    private String userId;
     private String postText;
     private String postUrl;
     private int postType; // [ 1 -> text, 2 -> image, 3 -> video ]
@@ -12,20 +12,12 @@ public class PostDTO {
     private Date timestamp;
     private int sharedPostId;
 
-    public int getPostId() {
-        return postId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setPostId(int postId) {
-        this.postId = postId;
-    }
-
-    public UserDTO getUserDTO() {
-        return userDTO;
-    }
-
-    public void setUserDTO(UserDTO userDTO) {
-        this.userDTO = userDTO;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPostText() {

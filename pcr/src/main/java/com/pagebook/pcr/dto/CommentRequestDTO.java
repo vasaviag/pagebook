@@ -1,37 +1,14 @@
-package com.pagebook.pcr.entity;
+package com.pagebook.pcr.dto;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "comments")
+public class CommentRequestDTO {
 
-public class Comment {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int commentId; // (Pk) (Auto Generated)
     private int postId;
     private String userId;
     private String commentText;
     private int parentCommentId;
     private Date timestamp;
-
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public int getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(int commentId) {
-        this.commentId = commentId;
-    }
 
     public int getPostId() {
         return postId;
@@ -63,5 +40,13 @@ public class Comment {
 
     public void setParentCommentId(int parentCommentId) {
         this.parentCommentId = parentCommentId;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 }

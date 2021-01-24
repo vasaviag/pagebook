@@ -1,8 +1,9 @@
 package com.pagebook.pcr.services.impl;
 
-import com.pagebook.pcr.dto.ReactionDetails;
+import com.pagebook.pcr.dto.ReactionDetailsDTO;
+import com.pagebook.pcr.dto.ReactionRequestDTO;
 import com.pagebook.pcr.dto.ReactionsDTO;
-import com.pagebook.pcr.dto.User;
+import com.pagebook.pcr.dto.UserDTO;
 import com.pagebook.pcr.entity.ReactionOnPosts;
 import com.pagebook.pcr.repository.IReactionRepository;
 import com.pagebook.pcr.services.IReactionServices;
@@ -24,8 +25,16 @@ public class ReactionServicesImpl implements IReactionServices {
     @Autowired
     RestTemplate restTemplate;
 
-    public ReactionOnPosts save(ReactionOnPosts reactionOnPosts)
+    @Autowired
+    RestTemplateImpl restTemplateImpl;
+
+    public ReactionOnPosts save(ReactionRequestDTO reactionRequestDTO)
     {
+        ReactionOnPosts reactionOnPosts = new ReactionOnPosts();
+        reactionOnPosts.setPostId(reactionRequestDTO.getPostId());
+        reactionOnPosts.setUserId(reactionRequestDTO.getUserId());
+        reactionOnPosts.setReactionType(reactionRequestDTO.getReactionType());
+
         return iReactionRepository.save(reactionOnPosts);
     }
 
@@ -45,19 +54,22 @@ public class ReactionServicesImpl implements IReactionServices {
 
         for(int i = 1; i <= 4; i++)
         {
-            List<User> users = new ArrayList<>();
+            List<UserDTO> userDTOS = new ArrayList<>();
             List<ReactionOnPosts> reactionOnPosts = new ArrayList<>();
             Iterable<ReactionOnPosts> reactionsIterable = iReactionRepository.findByPostIdAndReactionType(postId, i);
             reactionsIterable.forEach(reactionOnPosts::add);
-            reactions.add(new ReactionsDTO(i, reactionOnPosts.size()));
+            ReactionsDTO reactionsDTO = new ReactionsDTO();
+            reactionsDTO.setReactionType(i);
+            reactionsDTO.setCount(reactionOnPosts.size());
+            reactions.add(reactionsDTO);
+            System.out.println(reactionOnPosts.size());
         }
-
         return reactions;
     }
 
-    public List<ReactionDetails> findByPostIdAndReactionType(int postId, int reactionType)
+    public List<ReactionDetailsDTO> findByPostIdAndReactionType(int postId, int reactionType)
     {
-        List<ReactionDetails> reactions = new ArrayList<>();
+        List<ReactionDetailsDTO> reactions = new ArrayList<>();
         List<ReactionOnPosts> reactionOnPosts = new ArrayList<>();
         Iterable<ReactionOnPosts> reactionsIterable = iReactionRepository.findByPostIdAndReactionType(postId, reactionType);
         reactionsIterable.forEach(reactionOnPosts::add);
@@ -67,12 +79,10 @@ public class ReactionServicesImpl implements IReactionServices {
         for (ReactionOnPosts reactionOnPost : reactionOnPosts) {
             userIds.add(reactionOnPost.getUserId());
         }
-        final String uri = "http://10.177.1.179:7081/pb/user/userDetailsList";
-        ResponseEntity<User[]> responseEntity = restTemplate.postForEntity(uri, userIds, User[].class);
-        User users1 []  = responseEntity.getBody();
-        List<User> users = Arrays.asList(users1);
-        reactions.add(new ReactionDetails(reactionType, users));
-
+        List<UserDTO> userDTOS = restTemplateImpl.getUserDetailsList(userIds);
+        ReactionDetailsDTO reactionDetailsDTO = new ReactionDetailsDTO();
+        reactionDetailsDTO.setReactionType(reactionType);
+        reactionDetailsDTO.setUserDTOS(userDTOS);
         return reactions;
     }
 }

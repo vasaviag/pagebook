@@ -2,6 +2,7 @@ package com.pagebook.pcr.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "story")
@@ -10,19 +11,10 @@ public class Story {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int storyId; //(Pk) (Auto Generated)
     private String userId;
+    //todo : phani : support for multiple images (Done)
     private String storyUrl;
     private Date timestamp;
 
-    public Story() {
-        
-    }
-
-    public Story(int storyId, String userId, String storyUrl, Date timestamp) {
-        this.storyId = storyId;
-        this.userId = userId;
-        this.storyUrl = storyUrl;
-        this.timestamp = timestamp;
-    }
 
     public int getStoryId() {
         return storyId;

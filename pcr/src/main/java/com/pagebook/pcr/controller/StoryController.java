@@ -1,6 +1,7 @@
 package com.pagebook.pcr.controller;
 
 import com.pagebook.pcr.dto.StoryDTO;
+import com.pagebook.pcr.dto.StoryRequestDTO;
 import com.pagebook.pcr.entity.Story;
 import com.pagebook.pcr.services.IStoryServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +17,15 @@ public class StoryController {
     IStoryServices iStoryServices;
     
     @PostMapping(value = "/addStory")
-    Story addStory(@RequestBody Story story)
+    List<Story> addStory(@RequestBody StoryRequestDTO storyRequestDTO)
     {
-        return iStoryServices.save(story);
+        return iStoryServices.save(storyRequestDTO);
     }
 
     @PostMapping(value = "/updateStory")
-    Story updateStory(@RequestBody Story story)
+    List<Story> updateStory(@RequestBody StoryRequestDTO storyRequestDTO)
     {
-        return iStoryServices.save(story);
+        return iStoryServices.save(storyRequestDTO);
     }
 
     @DeleteMapping(value = "/deleteStory/{storyId}")

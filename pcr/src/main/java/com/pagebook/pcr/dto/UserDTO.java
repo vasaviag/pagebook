@@ -1,18 +1,10 @@
 package com.pagebook.pcr.dto;
 
-public class User {
+public class UserDTO {
     String userId;
     String userName;
     String profileImage;
 
-    public User() {
-    }
-
-    public User(String userId, String userName, String profileImage) {
-        this.userId = userId;
-        this.userName = userName;
-        this.profileImage = profileImage;
-    }
 
     public String getUserId() {
         return userId;

@@ -1,18 +1,16 @@
 package com.pagebook.pcr.services.impl;
 
 import com.pagebook.pcr.dto.StoryDTO;
-import com.pagebook.pcr.dto.User;
-import com.pagebook.pcr.entity.Story;
+import com.pagebook.pcr.dto.StoryRequestDTO;
+import com.pagebook.pcr.dto.UserDTO;
 import com.pagebook.pcr.entity.Story;
 import com.pagebook.pcr.repository.IStoryRepository;
 import com.pagebook.pcr.services.IStoryServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class StoryServicesImpl implements IStoryServices {
@@ -22,10 +20,23 @@ public class StoryServicesImpl implements IStoryServices {
     @Autowired
     RestTemplate restTemplate;
 
-    public Story save(Story story)
+    @Autowired
+    RestTemplateImpl restTemplateImpl;
+
+    public List<Story> save(StoryRequestDTO storyRequestDTO)
     {
-        story.setTimestamp(new Date());
-        return iStoryRepository.save(story);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MINUTE, 10);
+        List<Story> storyList = new ArrayList<>();
+        for (String storyUrl : storyRequestDTO.getStoryUrl()) {
+            Story story = new Story();
+            story.setStoryUrl(storyUrl);
+            story.setUserId(storyRequestDTO.getUserId());
+            story.setTimestamp(calendar.getTime());
+            storyList.add(iStoryRepository.save(story));
+        }
+        return storyList;
     }
 
     public void deleteById(int id)
@@ -46,9 +57,7 @@ public class StoryServicesImpl implements IStoryServices {
         for (Story story : stories)
         {
             Date currDate = new Date();
-            long diff = story.getTimestamp().getTime() - currDate.getTime();
-            long diffInDays = TimeUnit.MILLISECONDS.toMinutes(diff);
-            if(diffInDays > 10) {
+            if(currDate.compareTo(story.getTimestamp()) > 0) {
                 stories.remove(story);
                 deleteById(story.getStoryId());
             }
@@ -65,19 +74,18 @@ public class StoryServicesImpl implements IStoryServices {
 
     public List<StoryDTO> findFriendStories(String id)
     {
-        final String uri = "http://10.177.1.179:7081/pb/user/getFriends/" + id;
-        ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(uri, User[].class);
-        User users1 [] = responseEntity.getBody();
-        System.out.println(users1);
-
-        List<User> users = Arrays.asList(users1);
+        List<UserDTO> userDTOS = restTemplateImpl.getFriendsDetails(id);
 
         List<StoryDTO> storyDTOS = new ArrayList<>();
-        for (User user : users) {
-            List<Story> stories = findStoriesByUserId(user.getUserId());
+        for (UserDTO userDTO : userDTOS) {
+            List<Story> stories = findStoriesByUserId(userDTO.getUserId());
 
             for (Story story : stories) {
-                storyDTOS.add(new StoryDTO(story.getStoryId(), user, story.getStoryUrl(), story.getTimestamp()));
+                StoryDTO storyDTO = new StoryDTO();
+                storyDTO.setStoryId(story.getStoryId());
+                storyDTO.setUserDTO(userDTO);
+                storyDTO.setStoryUrl(story.getStoryUrl());
+                storyDTO.setTimestamp(story.getTimestamp());
             }
         }
 

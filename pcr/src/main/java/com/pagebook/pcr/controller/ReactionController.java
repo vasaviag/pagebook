@@ -1,6 +1,7 @@
 package com.pagebook.pcr.controller;
 
-import com.pagebook.pcr.dto.ReactionDetails;
+import com.pagebook.pcr.dto.ReactionDetailsDTO;
+import com.pagebook.pcr.dto.ReactionRequestDTO;
 import com.pagebook.pcr.dto.ReactionsDTO;
 import com.pagebook.pcr.entity.ReactionOnPosts;
 import com.pagebook.pcr.services.IReactionServices;
@@ -17,15 +18,15 @@ public class ReactionController {
     IReactionServices iReactionServices;
 
     @PostMapping(value = "/addReaction")
-    ReactionOnPosts addReaction(@RequestBody ReactionOnPosts reactionOnPosts)
+    ReactionOnPosts addReaction(@RequestBody ReactionRequestDTO reactionRequestDTO)
     {
-        return iReactionServices.save(reactionOnPosts);
+        return iReactionServices.save(reactionRequestDTO);
     }
 
     @PostMapping(value = "/updateReaction")
-    ReactionOnPosts updateReaction(@RequestBody ReactionOnPosts reactionOnPosts)
+    ReactionOnPosts updateReaction(@RequestBody ReactionRequestDTO reactionRequestDTO)
     {
-        return iReactionServices.save(reactionOnPosts);
+        return iReactionServices.save(reactionRequestDTO);
     }
 
     @DeleteMapping(value = "/deleteReaction/{reactionId}")
@@ -47,7 +48,7 @@ public class ReactionController {
     }
 
     @GetMapping(value = "/getReactionDetails/{postId}/{reactionType}")
-    List<ReactionDetails> getPostReactionDetails(@PathVariable("postId") int postId, @PathVariable("reactionType") int reactionType)
+    List<ReactionDetailsDTO> getPostReactionDetails(@PathVariable("postId") int postId, @PathVariable("reactionType") int reactionType)
     {
         return iReactionServices.findByPostIdAndReactionType(postId, reactionType);
     }

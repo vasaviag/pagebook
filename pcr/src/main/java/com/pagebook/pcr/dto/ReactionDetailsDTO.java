@@ -1,12 +1,11 @@
 package com.pagebook.pcr.dto;
 
-import com.pagebook.pcr.entity.ReactionOnPosts;
-
 import java.util.List;
 
-public class ReactionsDTO {
+public class ReactionDetailsDTO {
     int reactionType;
-    int count;
+    List<UserDTO> userDTOS;
+
 
     public int getReactionType() {
         return reactionType;
@@ -16,11 +15,11 @@ public class ReactionsDTO {
         this.reactionType = reactionType;
     }
 
-    public int getCount() {
-        return count;
+    public List<UserDTO> getUserDTOS() {
+        return userDTOS;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setUserDTOS(List<UserDTO> userDTOS) {
+        this.userDTOS = userDTOS;
     }
 }

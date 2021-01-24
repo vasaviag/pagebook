@@ -1,26 +1,14 @@
 package com.pagebook.pcr.dto;
 
-import com.pagebook.pcr.entity.Comment;
-
 import java.util.List;
 
 public class ParentAndChildCommentDTO {
     private int commentId; // (Pk) (Auto Generated)
     private int postId;
-    private User user;
+    private UserDTO userDTO;
     private String commentText;
     List<CommentDTO> comments;
 
-    public ParentAndChildCommentDTO() {
-    }
-
-    public ParentAndChildCommentDTO(int commentId, int postId, User user, String commentText, List<CommentDTO> comments) {
-        this.commentId = commentId;
-        this.postId = postId;
-        this.user = user;
-        this.commentText = commentText;
-        this.comments = comments;
-    }
 
     public int getCommentId() {
         return commentId;
@@ -38,12 +26,12 @@ public class ParentAndChildCommentDTO {
         this.postId = postId;
     }
 
-    public User getUser() {
-        return user;
+    public UserDTO getUserDTO() {
+        return userDTO;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserDTO(UserDTO userDTO) {
+        this.userDTO = userDTO;
     }
 
     public String getCommentText() {

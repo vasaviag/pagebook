@@ -7,7 +7,6 @@ import com.pagebook.pcr.services.ICommentServices;
 import com.pagebook.pcr.services.IPostServices;
 import com.pagebook.pcr.services.IReactionServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,9 +27,20 @@ public class PostServicesImpl implements IPostServices {
     @Autowired
     ICommentServices iCommentServices;
 
-    public Post save(Post post)
+    @Autowired
+    RestTemplateImpl restTemplateImpl;
+
+    public Post save(PostRequestDTO postRequestDTO)
     {
-        post.setTimestamp(new Date());
+        postRequestDTO.setTimestamp(new Date());
+        Post post = new Post();
+        post.setTimestamp(postRequestDTO.getTimestamp());
+        post.setPostCategory(postRequestDTO.getPostCategory());
+        post.setPostText(postRequestDTO.getPostText());
+        post.setPostType(postRequestDTO.getPostType());
+        post.setPostUrl(postRequestDTO.getPostUrl());
+        post.setSharedPostId(postRequestDTO.getSharedPostId());
+        post.setUserId(postRequestDTO.getUserId());
         return iPostRepository.save(post);
     }
 
@@ -52,39 +62,53 @@ public class PostServicesImpl implements IPostServices {
         return posts;
     }
 
-    public PostDetails findByPostId(int postId)
+    public PostDetailsDTO findByPostId(int postId)
     {
         Post post = iPostRepository.findByPostId(postId);
-        String uri = "http://10.177.1.179:7081/pb/user/getUserInfo/" + post.getUserId();
-        ResponseEntity<User> responseEntity = restTemplate.getForEntity(uri, User.class);
-        User user = responseEntity.getBody();
-        PostDTO postDTO = new PostDTO(post.getPostId(), user, post.getPostText(), post.getPostUrl(), post.getPostType(), post.getPostCategory(), post.getTimestamp(), post.getSharedPostId());
+        UserDTO userDTO = restTemplateImpl.getUserDetails(post.getUserId());
+        PostDTO postDTO = new PostDTO();
+        postDTO.setPostId(post.getPostId());
+        postDTO.setUserDTO(userDTO);
+        postDTO.setPostText(post.getPostText());
+        postDTO.setPostUrl(post.getPostUrl());
+        postDTO.setPostType(post.getPostType());
+        postDTO.setPostCategory(post.getPostCategory());
+        postDTO.setTimestamp(post.getTimestamp());
+        postDTO.setSharedPostId(post.getSharedPostId());
+
         List<ReactionsDTO> reactionsDTOS = iReactionServices.findByPostId(postId);
         List<ParentAndChildCommentDTO> parentAndChildCommentDTOS =  iCommentServices.findByPostId(postId);
-        PostDetails postDetails =  new PostDetails(postDTO, parentAndChildCommentDTOS, reactionsDTOS);
-        return postDetails;
+        PostDetailsDTO postDetailsDTO =  new PostDetailsDTO();
+        postDetailsDTO.setParentAndChildCommentDTO(parentAndChildCommentDTOS);
+        postDetailsDTO.setPostDTO(postDTO);
+        postDetailsDTO.setReactionsDTOS(reactionsDTOS);
+        return postDetailsDTO;
     }
 
     public List<PostDTO> findFriendPosts(String id)
     {
-        String uri = "http://10.177.1.179:7081/pb/user/getFriends/" + id;
-        ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(uri, User[].class);
-        User users1 [] = responseEntity.getBody();
-        System.out.println(users1);
-
-        List<User> users = Arrays.asList(users1);
+        List<UserDTO> userDTOS = restTemplateImpl.getFriendsDetails(id);
 
         List<PostDTO> postDTOS = new ArrayList<>();
-        for (User user : users) {
-            Iterable<Post> postsIterable = findPostsByUserId(user.getUserId());
+        for (UserDTO userDTO : userDTOS) {
+            Iterable<Post> postsIterable = findPostsByUserId(userDTO.getUserId());
             List<Post> posts = new ArrayList<>();
             postsIterable.forEach(posts::add);
 
             for (Post post : posts) {
-                postDTOS.add(new PostDTO(post.getPostId(), user, post.getPostText(), post.getPostUrl(), post.getPostType(), post.getPostCategory(), post.getTimestamp(), post.getSharedPostId()));
+                PostDTO postDTO = new PostDTO();
+                postDTO.setPostId(post.getPostId());
+                postDTO.setUserDTO(userDTO);
+                postDTO.setPostText(post.getPostText());
+                postDTO.setPostUrl(post.getPostUrl());
+                postDTO.setPostType(post.getPostType());
+                postDTO.setPostCategory(post.getPostCategory());
+                postDTO.setTimestamp(post.getTimestamp());
+                postDTO.setSharedPostId(post.getSharedPostId());
+                postDTOS.add(postDTO);
             }
         }
-        postDTOS.sort(Comparator.comparing(PostDTO::getTimestamp));
+        postDTOS.sort(Comparator.comparing(PostDTO::getTimestamp).reversed());
 
         return postDTOS;
     }
