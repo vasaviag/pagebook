@@ -7,6 +7,7 @@ public class PostDetailsDTO {
     private PostDTO postDTO;
     private List<ParentAndChildCommentDTO> parentAndChildCommentDTO;
     private List<ReactionsDTO> reactionsDTOS;
+    private Date timestamp;
 
     public PostDTO getPostDTO() {
         return postDTO;
@@ -30,5 +31,13 @@ public class PostDetailsDTO {
 
     public void setReactionsDTOS(List<ReactionsDTO> reactionsDTOS) {
         this.reactionsDTOS = reactionsDTOS;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 }

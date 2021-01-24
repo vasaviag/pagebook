@@ -8,7 +8,7 @@ import com.pagebook.pcr.entity.ReactionOnPosts;
 import java.util.List;
 
 public interface IReactionServices{
-    ReactionOnPosts save(ReactionRequestDTO reactionRequestDTO);
+    List<ReactionsDTO> save(ReactionRequestDTO reactionRequestDTO);
     void deleteById(int id);
     ReactionOnPosts findById(int id);
     List<ReactionsDTO> findByPostId(int postId);

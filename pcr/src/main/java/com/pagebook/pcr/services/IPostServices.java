@@ -12,7 +12,7 @@ public interface IPostServices {
     void deleteById(int id);
     Post findById(int id);
     PostDetailsDTO findByPostId(int postId);
-    List<Post> findPostsByUserId(String id);
-    List<PostDTO> findFriendPosts(String userId);
+    List<PostDetailsDTO> findPostsByUserId(String id);
+    List<PostDetailsDTO> findFriendPosts(String userId);
 
 }

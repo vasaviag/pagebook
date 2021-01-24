@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface IReactionRepository extends CrudRepository<ReactionOnPosts, Integer> {
     List<ReactionOnPosts> findByPostIdAndReactionType(int postId, int reactionType);
+    ReactionOnPosts findByPostIdAndUserId(int postId, String userId);
 }

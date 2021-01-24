@@ -54,12 +54,16 @@ public class PostServicesImpl implements IPostServices {
         return iPostRepository.findById(id).get();
     }
 
-    public List<Post> findPostsByUserId(String id)
+    public List<PostDetailsDTO> findPostsByUserId(String id)
     {
         Iterable<Post> postsIterable = iPostRepository.findByUserId(id);
-        List<Post> posts = new ArrayList<>();
-        postsIterable.forEach(posts::add);
-        return posts;
+
+        List<PostDetailsDTO> postDetailsDTOS = new ArrayList<>();
+        for (Post post : postsIterable)
+        {
+            postDetailsDTOS.add(findByPostId(post.getPostId()));
+        }
+        return postDetailsDTOS;
     }
 
     public PostDetailsDTO findByPostId(int postId)
@@ -82,35 +86,24 @@ public class PostServicesImpl implements IPostServices {
         postDetailsDTO.setParentAndChildCommentDTO(parentAndChildCommentDTOS);
         postDetailsDTO.setPostDTO(postDTO);
         postDetailsDTO.setReactionsDTOS(reactionsDTOS);
+        postDetailsDTO.setTimestamp(post.getTimestamp());
         return postDetailsDTO;
     }
 
-    public List<PostDTO> findFriendPosts(String id)
+    public List<PostDetailsDTO> findFriendPosts(String id)
     {
         List<UserDTO> userDTOS = restTemplateImpl.getFriendsDetails(id);
 
-        List<PostDTO> postDTOS = new ArrayList<>();
+        List<PostDetailsDTO> postDetailsDTOS = new ArrayList<>();
         for (UserDTO userDTO : userDTOS) {
-            Iterable<Post> postsIterable = findPostsByUserId(userDTO.getUserId());
-            List<Post> posts = new ArrayList<>();
+            Iterable<PostDetailsDTO> postsIterable = findPostsByUserId(userDTO.getUserId());
+            List<PostDetailsDTO> posts = new ArrayList<>();
             postsIterable.forEach(posts::add);
-
-            for (Post post : posts) {
-                PostDTO postDTO = new PostDTO();
-                postDTO.setPostId(post.getPostId());
-                postDTO.setUserDTO(userDTO);
-                postDTO.setPostText(post.getPostText());
-                postDTO.setPostUrl(post.getPostUrl());
-                postDTO.setPostType(post.getPostType());
-                postDTO.setPostCategory(post.getPostCategory());
-                postDTO.setTimestamp(post.getTimestamp());
-                postDTO.setSharedPostId(post.getSharedPostId());
-                postDTOS.add(postDTO);
-            }
+            postDetailsDTOS.addAll(posts);
         }
-        postDTOS.sort(Comparator.comparing(PostDTO::getTimestamp).reversed());
+        postDetailsDTOS.sort(Comparator.comparing(PostDetailsDTO::getTimestamp).reversed());
 
-        return postDTOS;
+        return postDetailsDTOS;
     }
 
 }

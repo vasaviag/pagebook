@@ -28,14 +28,23 @@ public class ReactionServicesImpl implements IReactionServices {
     @Autowired
     RestTemplateImpl restTemplateImpl;
 
-    public ReactionOnPosts save(ReactionRequestDTO reactionRequestDTO)
+    public List<ReactionsDTO> save(ReactionRequestDTO reactionRequestDTO)
     {
-        ReactionOnPosts reactionOnPosts = new ReactionOnPosts();
+        ReactionOnPosts reactionOnPosts = iReactionRepository.findByPostIdAndUserId(reactionRequestDTO.getPostId(), reactionRequestDTO.getUserId());
+        if(reactionOnPosts == null)
+        {
+            reactionOnPosts = new ReactionOnPosts();
+        }
+        else if(reactionOnPosts.getReactionType() == reactionRequestDTO.getReactionType())
+        {
+            deleteById(reactionOnPosts.getReactionId());
+            return findByPostId(reactionOnPosts.getPostId());
+        }
         reactionOnPosts.setPostId(reactionRequestDTO.getPostId());
         reactionOnPosts.setUserId(reactionRequestDTO.getUserId());
         reactionOnPosts.setReactionType(reactionRequestDTO.getReactionType());
-
-        return iReactionRepository.save(reactionOnPosts);
+        reactionOnPosts = iReactionRepository.save(reactionOnPosts);
+        return findByPostId(reactionOnPosts.getPostId());
     }
 
     public void deleteById(int id)
@@ -83,6 +92,7 @@ public class ReactionServicesImpl implements IReactionServices {
         ReactionDetailsDTO reactionDetailsDTO = new ReactionDetailsDTO();
         reactionDetailsDTO.setReactionType(reactionType);
         reactionDetailsDTO.setUserDTOS(userDTOS);
+        reactions.add(reactionDetailsDTO);
         return reactions;
     }
 }

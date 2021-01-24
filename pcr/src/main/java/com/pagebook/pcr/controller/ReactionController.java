@@ -18,13 +18,13 @@ public class ReactionController {
     IReactionServices iReactionServices;
 
     @PostMapping(value = "/addReaction")
-    ReactionOnPosts addReaction(@RequestBody ReactionRequestDTO reactionRequestDTO)
+    List<ReactionsDTO> addReaction(@RequestBody ReactionRequestDTO reactionRequestDTO)
     {
         return iReactionServices.save(reactionRequestDTO);
     }
 
     @PostMapping(value = "/updateReaction")
-    ReactionOnPosts updateReaction(@RequestBody ReactionRequestDTO reactionRequestDTO)
+    List<ReactionsDTO> updateReaction(@RequestBody ReactionRequestDTO reactionRequestDTO)
     {
         return iReactionServices.save(reactionRequestDTO);
     }

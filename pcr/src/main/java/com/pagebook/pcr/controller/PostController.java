@@ -37,7 +37,7 @@ public class PostController {
     }
 
     @GetMapping(value = "/getUserPosts/{userId}")
-    List<Post> getUserPosts(@PathVariable("userId") String userId)
+    List<PostDetailsDTO> getUserPosts(@PathVariable("userId") String userId)
     {
         return iPostServices.findPostsByUserId(userId);
     }
@@ -49,7 +49,7 @@ public class PostController {
     }
 
     @GetMapping(value = "/getFriendPosts/{userId}")
-    List<PostDTO> getFriendPosts(@PathVariable("userId") String userId)
+    List<PostDetailsDTO> getFriendPosts(@PathVariable("userId") String userId)
     {
         return iPostServices.findFriendPosts(userId);
     }
