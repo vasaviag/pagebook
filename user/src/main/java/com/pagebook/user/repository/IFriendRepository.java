@@ -26,4 +26,6 @@ public interface IFriendRepository extends CrudRepository<Friend,Integer> {
 
     @Query(value = "select true from friends where user_id=:userId AND friend_user_Id=:friendUserId", nativeQuery = true)
     boolean isFriend(@Param("userId")String userId, @Param("friendUserId")String friendUserId);
+
+    Iterable<Friend> findByFriendUserId(String userId);
 }

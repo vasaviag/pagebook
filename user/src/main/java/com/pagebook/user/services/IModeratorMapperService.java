@@ -11,4 +11,6 @@ public interface IModeratorMapperService {
     List<User> pagesManaged(String userId);
 
     List<User> allModerators(String userId);
+
+    boolean isModerator(String moderatorId, String businessId);
 }

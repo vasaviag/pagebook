@@ -23,6 +23,16 @@ public class ModeratorMapperServiceImpl implements IModeratorMapperService {
     }
 
     @Override
+    public boolean isModerator(String moderatorId, String businessId) {
+        try{
+            return iModeratorMapperRepository.isModerator(moderatorId, businessId);
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
     public List<User> pagesManaged(String userId) {
         Iterable<ModeratorMapper> moderatorMapperIterable = iModeratorMapperRepository.findByModeratorId(userId);
         List<ModeratorMapper> moderatorMapperList = new ArrayList<>();

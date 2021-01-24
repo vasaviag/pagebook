@@ -17,4 +17,6 @@ public interface IFriendService {
     boolean deleteFriend(String userId, String friendUserId);
 
     boolean isFriend(String userId, String friendUserId);
+
+    List<FriendDetails> allFollowers(String userId);
 }

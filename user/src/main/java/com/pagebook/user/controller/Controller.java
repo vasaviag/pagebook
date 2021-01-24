@@ -80,9 +80,13 @@ public class Controller {
     }
 
 
-    @GetMapping(value = "/getFriends/{userId}")
+    @GetMapping(value = "/getFollowings/{userId}")
     List<FriendDetails>allFollowings(@PathVariable("userId") String userId){
         return iFriendService.allFollowings(userId);
+    }
+    @GetMapping(value = "/getFollowers/{userId}")
+    List<FriendDetails>allFollowers(@PathVariable("userId") String userId){
+        return iFriendService.allFollowers(userId);
     }
 
     @GetMapping(value= "isFriend/{userId}/{friendUserId}")
@@ -90,14 +94,19 @@ public class Controller {
         return iFriendService.isFriend(userId, friendUserId);
     }
 
+    @GetMapping(value= "isModerator/{moderatorId}/{businessId}")
+    public boolean isModerator(@PathVariable("moderatorId")String moderatorId,@PathVariable("businessId")String businessId){
+        return iModeratorMapperService.isModerator(moderatorId, businessId);
+    }
+
     @GetMapping(value = "/youMayKnow/{userId}")
     List<FriendDetails>youMayKnow(@PathVariable("userId") String userId){
         return iFriendService.youMayKnow(userId);
     }
 
+
     @GetMapping(value="friends/findAll")
     List<Friend> findAllFriends(){
-
         return iFriendService.findAll();
     }
 

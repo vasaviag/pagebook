@@ -69,6 +69,25 @@ public class FriendServiceImpl implements IFriendService {
     }
 
     @Override
+    public List<FriendDetails> allFollowers(String userId) {
+        Iterable<Friend> friendIterable = iFriendRepository.findByFriendUserId(userId);
+        List<Friend> friendList = new ArrayList<>();
+        friendIterable.forEach(friendList::add);
+
+        List<FriendDetails> friendDetailsList = new ArrayList<>();
+        for (Friend friend : friendList) {
+            FriendDetails friendDetails = new FriendDetails();
+            User user = iUserRepository.findById(friend.getUserId()).get();
+            friendDetails.setProfileImage(user.getProfileImage());
+            friendDetails.setUserId(user.getUserId());
+            friendDetails.setUserName(user.getUserName());
+            friendDetailsList.add(friendDetails);
+        }
+
+        return friendDetailsList;
+    }
+
+    @Override
     public boolean deleteFriend(String userId, String friendUserId) {
         Friend t = new Friend();
         t.setUserId(userId);
