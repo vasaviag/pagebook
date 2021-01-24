@@ -15,4 +15,6 @@ public interface IFriendService {
     List<FriendDetails> youMayKnow(String userId);
 
     boolean deleteFriend(String userId, String friendUserId);
+
+    boolean isFriend(String userId, String friendUserId);
 }

@@ -13,6 +13,7 @@ import com.pagebook.user.services.IFriendService;
 import com.pagebook.user.services.IModeratorMapperService;
 import com.pagebook.user.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -82,6 +83,11 @@ public class Controller {
     @GetMapping(value = "/getFriends/{userId}")
     List<FriendDetails>allFollowings(@PathVariable("userId") String userId){
         return iFriendService.allFollowings(userId);
+    }
+
+    @GetMapping(value= "isFriend/{userId}/{friendUserId}")
+    public boolean isFriend(@PathVariable("userId")String userId,@PathVariable("friendUserId")String friendUserId){
+        return iFriendService.isFriend(userId, friendUserId);
     }
 
     @GetMapping(value = "/youMayKnow/{userId}")

@@ -37,6 +37,17 @@ public class FriendServiceImpl implements IFriendService {
     }
 
     @Override
+    public boolean isFriend(String userId, String friendUserId) {
+        try{
+            return iFriendRepository.isFriend(userId, friendUserId);
+        }
+        catch (Exception e){
+            return false;
+        }
+
+    }
+
+    @Override
     public List<FriendDetails> allFollowings(String userId) {
 
         Iterable<Friend> friendIterable = iFriendRepository.findByUserId(userId);
