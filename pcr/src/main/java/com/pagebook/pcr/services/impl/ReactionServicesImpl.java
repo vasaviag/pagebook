@@ -59,6 +59,7 @@ public class ReactionServicesImpl implements IReactionServices {
 
     public List<ReactionsDTO> findByPostId(int postId)
     {
+        System.out.println("In Reaction");
         List<ReactionsDTO> reactions = new ArrayList<>();
 
         for(int i = 1; i <= 4; i++)
@@ -71,7 +72,7 @@ public class ReactionServicesImpl implements IReactionServices {
             reactionsDTO.setReactionType(i);
             reactionsDTO.setCount(reactionOnPosts.size());
             reactions.add(reactionsDTO);
-            System.out.println(reactionOnPosts.size());
+            //System.out.println(reactionOnPosts.size());
         }
         return reactions;
     }

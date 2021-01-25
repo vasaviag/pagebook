@@ -17,6 +17,7 @@ public class RestTemplateImpl {
 
     public UserDTO getUserDetails(String userId)
     {
+        System.out.println("for testing " + userId);
         String uri = "http://10.177.1.179:7081/pb/user/getUserInfo/" + userId;
         ResponseEntity<UserDTO> responseEntity = restTemplate.getForEntity(uri, UserDTO.class);
         UserDTO userDTO = responseEntity.getBody();
@@ -25,7 +26,8 @@ public class RestTemplateImpl {
 
     public List<UserDTO> getFriendsDetails(String userId)
     {
-        String uri = "http://10.177.1.179:7081/pb/user/getFriends/" + userId;
+
+        String uri = "http://10.177.1.179:7081/pb/user/getFollowers/" + userId;
         ResponseEntity<UserDTO[]> responseEntity = restTemplate.getForEntity(uri, UserDTO[].class);
         UserDTO users1 [] = responseEntity.getBody();
         List<UserDTO> userDTOS = Arrays.asList(users1);

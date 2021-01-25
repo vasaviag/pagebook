@@ -51,11 +51,9 @@ public class CommentServicesImpl implements ICommentServices {
     {
         List<ParentAndChildCommentDTO> parentAndChildCommentDTOS = new ArrayList<>();
         Iterable<Comment> commentsIterable = iCommentRepository.findByPostIdAndParentCommentId(postId, 0);
-        //todo : remove iterable to list converstion .. use iterable to operate the logic
-        List<Comment> comments = new ArrayList<>();
-        commentsIterable.forEach(comments::add);
-        for (Comment comment: comments)
+        for (Comment comment: commentsIterable)
         {
+            System.out.println("In Comment");
             List<CommentDTO> commentDTOS = new ArrayList<>();
 
             UserDTO userDTO = restTemplateImpl.getUserDetails(comment.getUserId());

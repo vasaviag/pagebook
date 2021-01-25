@@ -68,7 +68,12 @@ public class PostServicesImpl implements IPostServices {
 
     public PostDetailsDTO findByPostId(int postId)
     {
-        Post post = iPostRepository.findByPostId(postId);
+        System.out.println("before testing in userdetails");
+
+        Post post = iPostRepository.findById(postId).get();
+        System.out.println(post.getUserId());
+        System.out.println(post.getPostCategory());
+        System.out.println(post.getPostType());
         UserDTO userDTO = restTemplateImpl.getUserDetails(post.getUserId());
         PostDTO postDTO = new PostDTO();
         postDTO.setPostId(post.getPostId());
