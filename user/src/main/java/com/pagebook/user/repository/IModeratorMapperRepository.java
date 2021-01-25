@@ -14,4 +14,6 @@ public interface IModeratorMapperRepository extends CrudRepository<ModeratorMapp
     boolean isModerator(@Param("moderatorId") String moderatorId,@Param("businessId") String businessId);
 
     void deleteByBusinessIdAndModeratorId(String businessId,String moderatorId);
+
+    ModeratorMapper findByModeratorIdAndBusinessId(String moderatorId, String businessId);
 }

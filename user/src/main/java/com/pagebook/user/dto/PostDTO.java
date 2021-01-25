@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class PostDTO {
     private int postId; // (Pk) (Auto Generated)
-    private User user;
+    private UserDTO userDTO;
     private String postText;
     private String postUrl;
     private int postType; // [ 1 -> text, 2 -> image, 3 -> video ]
@@ -22,12 +22,12 @@ public class PostDTO {
         this.postId = postId;
     }
 
-    public User getUser() {
-        return user;
+    public UserDTO getUserDTO() {
+        return userDTO;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserDTO(UserDTO userDTO) {
+        this.userDTO = userDTO;
     }
 
     public String getPostText() {
