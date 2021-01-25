@@ -25,7 +25,7 @@ public class RestTemplateImpl {
     }
 
     public FullUserDetail getFullUserDetail(int channelId, String userName) {
-        String uri = "http://10.177.1.170/user/findByChannlIdAndUsername/" + channelId + "/" + userName;
+        String uri = "http://10.177.1.170/user/findByChannelIdAndUsername/" + channelId + "/" + userName;
         ResponseEntity<FullUserDetail> responseEntity = restTemplate.getForEntity(uri, FullUserDetail.class);
         FullUserDetail fullUserDetail = responseEntity.getBody();
         return fullUserDetail;
