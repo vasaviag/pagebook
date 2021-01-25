@@ -128,7 +128,7 @@ public class Controller {
     }
 
     @Transactional
-    @DeleteMapping(value = "/removeModerator")
+    @PostMapping(value = "/removeModerator")
     public void deletemoderator(@RequestBody ModeratorMapper moderatorMapper){
         iModeratorMapperService.deleteModerator(moderatorMapper);
 
