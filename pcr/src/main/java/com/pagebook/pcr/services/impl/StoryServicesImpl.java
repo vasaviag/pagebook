@@ -69,6 +69,7 @@ public class StoryServicesImpl implements IStoryServices {
     {
         Story story = iStoryRepository.findByStoryId(id);
         Date timestamp = story.getTimestamp();
+        story.setTimestamp(timestamp);
         return story;
     }
 
@@ -80,12 +81,14 @@ public class StoryServicesImpl implements IStoryServices {
         for (UserDTO userDTO : userDTOS) {
             List<Story> stories = findStoriesByUserId(userDTO.getUserId());
 
+
             for (Story story : stories) {
                 StoryDTO storyDTO = new StoryDTO();
                 storyDTO.setStoryId(story.getStoryId());
                 storyDTO.setUserDTO(userDTO);
                 storyDTO.setStoryUrl(story.getStoryUrl());
                 storyDTO.setTimestamp(story.getTimestamp());
+                storyDTOS.add(storyDTO);
             }
         }
 
