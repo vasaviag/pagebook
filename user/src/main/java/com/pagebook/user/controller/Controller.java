@@ -1,9 +1,7 @@
 package com.pagebook.user.controller;
 
 
-import com.pagebook.user.dto.FriendDetails;
-import com.pagebook.user.dto.FriendRequestDetails;
-import com.pagebook.user.dto.RequestDetails;
+import com.pagebook.user.dto.*;
 import com.pagebook.user.entity.Friend;
 import com.pagebook.user.entity.FriendRequest;
 import com.pagebook.user.entity.ModeratorMapper;
@@ -144,5 +142,14 @@ public class Controller {
         return iModeratorMapperService.allModerators(userId);
     }
 
+    @GetMapping(value = "/myProfile/{userId}")
+    public MyProfile getMyProfile(@PathVariable("userId") String userId){
+        return iUserService.getMyProfile(userId);
+    }
+
+    @GetMapping(value = "/userProfile/{userId}/{friendUserId}")
+    public FriendProfile getUserProfile(@PathVariable("userId") String userId, @PathVariable("friendUserId") String friendUserId){
+        return iUserService.getUserProfile(userId, friendUserId);
+    }
 
 }

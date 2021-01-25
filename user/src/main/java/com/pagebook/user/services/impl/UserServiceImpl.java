@@ -1,8 +1,15 @@
 package com.pagebook.user.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pagebook.user.dto.FriendProfile;
+import com.pagebook.user.dto.FullUserDetail;
+import com.pagebook.user.dto.MyProfile;
+import com.pagebook.user.dto.PostDetailsDTO;
 import com.pagebook.user.entity.User;
+import com.pagebook.user.repository.IModeratorMapperRepository;
 import com.pagebook.user.repository.IUserRepository;
+import com.pagebook.user.services.IFriendService;
+import com.pagebook.user.services.IModeratorMapperService;
 import com.pagebook.user.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -18,6 +25,15 @@ public class UserServiceImpl implements IUserService {
     IUserRepository iUserRepository;
     @Autowired
     KafkaTemplate kafkaTemplate;
+
+    @Autowired
+    RestTemplateImpl restTemplateImpl;
+    @Autowired
+    IFriendService iFriendService;
+
+    @Autowired
+    IModeratorMapperService iModeratorMapperService;
+
     @Override
     public User save(User user)  {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -54,5 +70,68 @@ public class UserServiceImpl implements IUserService {
         List<User> userDetailsList = new ArrayList<>();
         userIterable.forEach(userDetailsList::add);
         return userDetailsList;
+    }
+
+    public MyProfile getMyProfile(String userId)
+    {
+        User user = getUserInfo(userId);
+        FullUserDetail fullUserDetail = restTemplateImpl.getFullUserDetail( 0, user.getUserName());
+        List<PostDetailsDTO> postDetailsDTOS = restTemplateImpl.getUserPosts(userId);
+        MyProfile myProfile = new MyProfile();
+        myProfile.setBio(fullUserDetail.getBio());
+        myProfile.setDateOfBirth(fullUserDetail.getDateOfBirth());
+        myProfile.setFollowerCount(iFriendService.allFollowers(userId).size());
+        myProfile.setFollowingCount(iFriendService.allFollowings(userId).size());
+        myProfile.setType(fullUserDetail.getType());
+        myProfile.setPostDetailsDTOS(postDetailsDTOS);
+        myProfile.setUsername(fullUserDetail.getUsername());
+        myProfile.setProfileImage(fullUserDetail.getProfileImage());
+        return myProfile;
+    }
+
+    public FriendProfile getUserProfile(String userId, String friendUserId)
+    {
+        FriendProfile friendProfile = new FriendProfile();
+        User user = getUserInfo(friendUserId);
+        List<PostDetailsDTO> postDetailsDTOS;
+        FullUserDetail fullUserDetail = restTemplateImpl.getFullUserDetail(0, user.getUserName());
+        friendProfile.setType(fullUserDetail.getType());
+        if(iModeratorMapperService.isModeratorFor(userId, friendUserId))
+        {
+            friendProfile.setIsFriend(true);
+        }
+        else
+        {
+            friendProfile.setIsFriend(false);
+        }
+
+        if(iFriendService.isFriend(userId, friendUserId))
+        {
+            friendProfile.setIsFriend(true);
+        }
+        else
+        {
+            friendProfile.setIsFriend(false);
+        }
+
+        if((friendProfile.getIsFriend() == false && friendProfile.getType() == 1)
+                || (friendProfile.getIsFriend() == true) || (friendProfile.getType()==3))
+        {
+            postDetailsDTOS = restTemplateImpl.getUserPosts(friendUserId);
+        }
+        else
+        {
+            postDetailsDTOS = null;
+        }
+
+        friendProfile.setBio(fullUserDetail.getBio());
+        friendProfile.setDateOfBirth(fullUserDetail.getDateOfBirth());
+        friendProfile.setFollowerCount(iFriendService.allFollowers(friendUserId).size());
+        friendProfile.setFollowingCount(iFriendService.allFollowings(friendUserId).size());
+        friendProfile.setType(fullUserDetail.getType());
+        friendProfile.setPostDetailsDTOS(postDetailsDTOS);
+        friendProfile.setUsername(fullUserDetail.getUsername());
+        friendProfile.setProfileImage(fullUserDetail.getProfileImage());
+        return friendProfile;
     }
 }
