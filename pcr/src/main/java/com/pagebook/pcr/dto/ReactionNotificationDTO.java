@@ -1,8 +1,10 @@
 package com.pagebook.pcr.dto;
 
+import com.pagebook.pcr.entity.Post;
+
 public class ReactionNotificationDTO {
     private int reactionId; // (Pk) (Auto Generated)
-    private PostDTO postDTO;
+    private Post post;
     private String reactorId;
 
     public int getReactionId() {
@@ -13,12 +15,12 @@ public class ReactionNotificationDTO {
         this.reactionId = reactionId;
     }
 
-    public PostDTO getPostDTO() {
-        return postDTO;
+    public Post getPost() {
+        return post;
     }
 
-    public void setPostDTO(PostDTO postDTO) {
-        this.postDTO = postDTO;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     public String getReactor() {

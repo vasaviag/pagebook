@@ -38,6 +38,8 @@ public class ReactionServicesImpl implements IReactionServices {
         {
             deleteById(reactionOnPosts.getReactionId());
             //todo : need to inform common infra and analytics on the reaction revert
+
+
             return findByPostId(reactionOnPosts.getPostId());
         }
         reactionOnPosts.setPostId(reactionRequestDTO.getPostId());
@@ -45,22 +47,15 @@ public class ReactionServicesImpl implements IReactionServices {
         reactionOnPosts.setReactionType(reactionRequestDTO.getReactionType());
         reactionOnPosts = iReactionRepository.save(reactionOnPosts);
 
-        //todo : move this code for sending details to common infra and analytics to two different mehtods
+        //todo : move this code for sending details to common infra and analytics to two different methods
         ReactionNotificationDTO reactionNotificationDTO = new ReactionNotificationDTO();
         Post post = iPostServices.findById(reactionOnPosts.getPostId());
-        PostDTO postDTO = new PostDTO();
-        postDTO.setPostId(post.getPostId());
+
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(post.getUserId());
-        postDTO.setUserDTO(userDTO);
-        postDTO.setPostText(post.getPostText());
-        postDTO.setPostUrl(post.getPostUrl());
-        postDTO.setPostType(post.getPostType());
-        postDTO.setPostCategory(post.getPostCategory());
-        postDTO.setTimestamp(post.getTimestamp());
-        postDTO.setSharedPostId(post.getSharedPostId());
 
-        reactionNotificationDTO.setPostDTO(postDTO);
+
+        reactionNotificationDTO.setPost(post);
         reactionNotificationDTO.setReactor(reactionRequestDTO.getUserId());
         reactionNotificationDTO.setReactionId(reactionOnPosts.getReactionId());
 
@@ -69,7 +64,25 @@ public class ReactionServicesImpl implements IReactionServices {
         if(reactionOnPosts.getReactionType() == 1 || reactionOnPosts.getReactionType() == 3)
             analyticsDTO.setAction("like");
         else
+        {
             analyticsDTO.setAction("dislike");
+            FullUserDetail fullUserDetail = restTemplateImpl.getFullUserDetail(0, iPostServices.findByPostId(reactionRequestDTO.getPostId(), reactionRequestDTO.getUserId()).getPostDTO().getUserDTO().getUserName());
+            if(fullUserDetail.getType() == 3)
+            {
+                CRMDTO crmdto = new CRMDTO();
+                System.out.println("1 step - > CRM");
+
+                crmdto.setLeadID(reactionRequestDTO.getUserId());
+                crmdto.setLeadName(restTemplateImpl.getUserDetails(reactionRequestDTO.getUserId()).getUserName());
+                crmdto.setLeadType(3);
+                crmdto.setBusinessID(fullUserDetail.getUserId());
+                crmdto.setPostID(String.valueOf(reactionOnPosts.getPostId()));
+
+                restTemplateImpl.sendDislikeToCRM(crmdto);
+                System.out.println("2 step -> CRM");
+            }
+        }
+
         analyticsDTO.setCategoryName(post.getPostCategory());
         if(post.getPostType() == 1)
             analyticsDTO.setType("Text");
@@ -79,12 +92,15 @@ public class ReactionServicesImpl implements IReactionServices {
             analyticsDTO.setType("Video");
         analyticsDTO.setChannelId(0);
         analyticsDTO.setTimeStamp(post.getTimestamp());
+
+
         restTemplateImpl.sendToAnalytics(analyticsDTO);
 
         restTemplateImpl.sendReactionDetailsToCommonInfra(reactionNotificationDTO);
 
         return findByPostId(reactionOnPosts.getPostId());
     }
+
 
     public void deleteById(int id)
     {
