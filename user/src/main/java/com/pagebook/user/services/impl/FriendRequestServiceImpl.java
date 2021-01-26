@@ -1,6 +1,8 @@
 package com.pagebook.user.services.impl;
 
 import com.pagebook.user.dto.AnalyticsVFDTO;
+import com.pagebook.user.dto.CRMDTO;
+import com.pagebook.user.dto.FullUserDetail;
 import com.pagebook.user.dto.RequestDetails;
 import com.pagebook.user.entity.Friend;
 import com.pagebook.user.entity.FriendRequest;
@@ -55,6 +57,17 @@ public class FriendRequestServiceImpl implements IFriendRequestService {
             analyticsVFDTO.setChannelId(0);
             analyticsVFDTO.setAction("follow");
             restTemplateImpl.sendToAnalytics(analyticsVFDTO);
+
+            FullUserDetail fullUserDetail = restTemplateImpl.getFullUserDetail(0, iUserRepository.findById(friendRequest.getReceiverId()).get().getUserName());
+            if(fullUserDetail.getType() == 3)
+            {
+                CRMDTO crmdto = new CRMDTO();
+                crmdto.setLeadID(friendRequest.getSenderId());
+                crmdto.setLeadName(fullUserDetail.getUsername());
+                crmdto.setLeadType(1);
+                crmdto.setBusinessID(friendRequest.getReceiverId());
+                restTemplateImpl.sendFollowToCRM(crmdto);
+            }
 
         }
         return friendRequest;

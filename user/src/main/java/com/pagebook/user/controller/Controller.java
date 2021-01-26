@@ -57,6 +57,13 @@ public class Controller {
         return iUserService.userDetailsList(userIdList);
     }
 
+    //userExists -> boolean
+
+    @GetMapping(value = "/isExisting")
+    public boolean isExisting(@PathVariable("userId") String userId){
+        return iUserService.isExisting(userId);
+    }
+
 
     @PostMapping(value = "/addFriendRequest")
     public FriendRequest addFriendRequest(@RequestBody FriendRequest friendRequest){
