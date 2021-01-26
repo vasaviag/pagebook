@@ -1,10 +1,7 @@
 package com.pagebook.user.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pagebook.user.dto.FriendProfile;
-import com.pagebook.user.dto.FullUserDetail;
-import com.pagebook.user.dto.MyProfile;
-import com.pagebook.user.dto.PostDetailsDTO;
+import com.pagebook.user.dto.*;
 import com.pagebook.user.entity.User;
 import com.pagebook.user.repository.IModeratorMapperRepository;
 import com.pagebook.user.repository.IUserRepository;
@@ -46,7 +43,9 @@ public class UserServiceImpl implements IUserService {
             System.out.println(e.toString());
         }
 
+        System.out.println("before kafka");
         kafkaTemplate.send("newuser",userString);
+        System.out.println("after kafka");
         return iUserRepository.save(user);
     }
 
@@ -132,6 +131,11 @@ public class UserServiceImpl implements IUserService {
         friendProfile.setPostDetailsDTOS(postDetailsDTOS);
         friendProfile.setUsername(fullUserDetail.getUsername());
         friendProfile.setProfileImage(fullUserDetail.getProfileImage());
+        AnalyticsVFDTO analyticsVFDTO = new AnalyticsVFDTO();
+        analyticsVFDTO.setUserId(friendUserId);
+        analyticsVFDTO.setChannelId(0);
+        analyticsVFDTO.setAction("view");
+        restTemplateImpl.sendToAnalytics(analyticsVFDTO);
         return friendProfile;
     }
 }

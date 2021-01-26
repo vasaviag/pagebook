@@ -1,5 +1,6 @@
 package com.pagebook.user.services.impl;
 
+import com.pagebook.user.dto.AnalyticsVFDTO;
 import com.pagebook.user.dto.FullUserDetail;
 import com.pagebook.user.dto.PostDetailsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,16 @@ public class RestTemplateImpl {
     }
 
     public FullUserDetail getFullUserDetail(int channelId, String userName) {
-        String uri = "http://10.177.1.51:8085/user/findByChannelIdAndUsername/" + channelId + "/" + userName;
+        String uri = "http://10.177.1.104:8085/user/findByChannelIdAndUsername/" + channelId + "/" + userName;
         ResponseEntity<FullUserDetail> responseEntity = restTemplate.getForEntity(uri, FullUserDetail.class);
         FullUserDetail fullUserDetail = responseEntity.getBody();
         return fullUserDetail;
     }
+
+    public void sendToAnalytics(AnalyticsVFDTO analyticsVFDTO)
+    {
+        String uri = "http://10.177.1.164:8080/analytics";
+        restTemplate.postForEntity(uri, analyticsVFDTO, null);
+    }
+
 }
