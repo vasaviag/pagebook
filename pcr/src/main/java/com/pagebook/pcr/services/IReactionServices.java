@@ -13,4 +13,5 @@ public interface IReactionServices{
     ReactionOnPosts findById(int id);
     List<ReactionsDTO> findByPostId(int postId);
     List<ReactionDetailsDTO> findByPostIdAndReactionType(int postId, int reactionType);
+
 }
