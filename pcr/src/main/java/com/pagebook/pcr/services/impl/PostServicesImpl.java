@@ -119,7 +119,6 @@ public class PostServicesImpl implements IPostServices {
         postDetailsDTO.setPostDTO(postDTO);
         postDetailsDTO.setReactionsDTOS(reactionsDTOS);
         postDetailsDTO.setTimestamp(post.getTimestamp());
-        System.out.println("herre "+ reactionOnPosts.getReactionType());
         postDetailsDTO.setReactionType(reactionOnPosts.getReactionType());
         return postDetailsDTO;
     }

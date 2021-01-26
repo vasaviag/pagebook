@@ -40,22 +40,9 @@ public class CommentServicesImpl implements ICommentServices {
         commentNotificationDTO.setCommentorId(commentRequestDTO.getUserId());
         commentNotificationDTO.setCommentId(comment1.getCommentId());
         commentNotificationDTO.setCommentText(comment1.getCommentText());
-        PostDTO postDTO = new PostDTO();
-        postDTO.setPostId(comment.getPostId());
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUserId(comment.getUserId());
+        Post post = iPostServices.findById(comment.getPostId());
 
-        Post post = iPostServices.findById(comment1.getPostId());
-
-        postDTO.setUserDTO(userDTO);
-        postDTO.setPostText(post.getPostText());
-        postDTO.setPostUrl(post.getPostUrl());
-        postDTO.setPostType(post.getPostType());
-        postDTO.setPostCategory(post.getPostCategory());
-        postDTO.setTimestamp(post.getTimestamp());
-        postDTO.setSharedPostId(post.getSharedPostId());
-
-        commentNotificationDTO.setPostDTO(postDTO);
+        commentNotificationDTO.setPost(post);
 
         AnalyticsDTO analyticsDTO = new AnalyticsDTO();
         analyticsDTO.setPostId(post.getPostId());

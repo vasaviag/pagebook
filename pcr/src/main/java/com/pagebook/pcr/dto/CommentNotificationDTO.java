@@ -1,8 +1,10 @@
 package com.pagebook.pcr.dto;
 
+import com.pagebook.pcr.entity.Post;
+
 public class CommentNotificationDTO {
     private int commentId; // (Pk) (Auto Generated)
-    private PostDTO postDTO;
+    private Post post;
     private String commentorId;
     private String commentText;
 
@@ -14,12 +16,12 @@ public class CommentNotificationDTO {
         this.commentId = commentId;
     }
 
-    public PostDTO getPostDTO() {
-        return postDTO;
+    public Post getPost() {
+        return post;
     }
 
-    public void setPostDTO(PostDTO postDTO) {
-        this.postDTO = postDTO;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     public String getCommentorId() {

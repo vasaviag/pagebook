@@ -45,6 +45,14 @@ public class RestTemplateImpl {
         return userDTOS;
     }
 
+    public FullUserDetail getFullUserDetail(int channelId, String userName) {
+        String uri = "http://10.177.1.104:8085/user/findByChannelIdAndUsername/" + channelId + "/" + userName;
+        ResponseEntity<FullUserDetail> responseEntity = restTemplate.getForEntity(uri, FullUserDetail.class);
+        FullUserDetail fullUserDetail = responseEntity.getBody();
+        return fullUserDetail;
+    }
+
+
     public List<UserDTO> getUserDetailsList(List<String> userIds) {
         final String uri = "http://10.177.1.179:7081/pb/user/userDetailsList";
         ResponseEntity<UserDTO[]> responseEntity = restTemplate.postForEntity(uri, userIds, UserDTO[].class);
@@ -61,8 +69,11 @@ public class RestTemplateImpl {
 
     public void sendReactionDetailsToCommonInfra(ReactionNotificationDTO reactionNotificationDTO)
     {
+        System.out.println(reactionNotificationDTO.getPost().getUserId());
+        System.out.println("before sending");
         String uri = "http://10.177.2.54:8080/notification/pb/reaction";
         restTemplate.postForEntity(uri, reactionNotificationDTO, null);
+        System.out.println("after sending");
     }
 
     public void sendCommentDetailsToCommonInfra(CommentNotificationDTO commentNotificationDTO)
@@ -76,4 +87,13 @@ public class RestTemplateImpl {
         String uri = "http://10.177.1.164:8080/analytics";
         restTemplate.postForEntity(uri, analyticsDTO, null);
     }
+
+    public void sendDislikeToCRM(CRMDTO crmdto)
+    {
+        System.out.println("in dislike CRM");
+        String uri = "http://10.177.1.116:8001/lead/0/";
+        restTemplate.postForEntity(uri, crmdto, null);
+        System.out.println("after call CRM");
+    }
+
 }
