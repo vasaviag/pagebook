@@ -41,7 +41,7 @@ public class RestTemplateImpl {
 
     public void sendFollowToCRM(CRMDTO crmdto)
     {
-        String uri = "http://10.177.2.81:8001/lead/0";
+        String uri = "http://10.177.1.116:8001/lead/0/";
         restTemplate.postForEntity(uri, crmdto, null);
     }
 

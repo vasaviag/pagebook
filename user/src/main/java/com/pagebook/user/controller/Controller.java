@@ -59,7 +59,7 @@ public class Controller {
 
     //userExists -> boolean
 
-    @GetMapping(value = "/isExisting")
+    @GetMapping(value = "/isExisting/{userId} ")
     public boolean isExisting(@PathVariable("userId") String userId){
         return iUserService.isExisting(userId);
     }
@@ -135,6 +135,13 @@ public class Controller {
     @Transactional
     @DeleteMapping(value = "/removeModerator")
     public void deletemoderator(@RequestBody ModeratorMapper moderatorMapper){
+        iModeratorMapperService.deleteModerator(moderatorMapper);
+
+    }
+
+    @Transactional
+    @PostMapping(value = "/removeModerator1")
+    public void deletemoderator1(@RequestBody ModeratorMapper moderatorMapper){
         iModeratorMapperService.deleteModerator(moderatorMapper);
 
     }

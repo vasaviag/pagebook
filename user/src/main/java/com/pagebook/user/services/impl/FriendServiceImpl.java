@@ -57,11 +57,19 @@ public class FriendServiceImpl implements IFriendService {
         List<FriendDetails> friendDetailsList = new ArrayList<>();
         for (Friend friend : friendList) {
             FriendDetails friendDetails = new FriendDetails();
-            User user = iUserRepository.findById(friend.getFriendUserId()).get();
-            friendDetails.setProfileImage(user.getProfileImage());
-            friendDetails.setUserId(user.getUserId());
-            friendDetails.setUserName(user.getUserName());
-            friendDetailsList.add(friendDetails);
+            try{
+                User user = iUserRepository.findById(friend.getFriendUserId()).get();
+                friendDetails.setProfileImage(user.getProfileImage());
+                friendDetails.setUserId(user.getUserId());
+                friendDetails.setUserName(user.getUserName());
+                friendDetailsList.add(friendDetails);
+
+            }
+            catch (Exception e){
+                System.out.println("user not in followings");
+                return friendDetailsList;
+            }
+
         }
 
         return friendDetailsList;
@@ -77,11 +85,20 @@ public class FriendServiceImpl implements IFriendService {
         List<FriendDetails> friendDetailsList = new ArrayList<>();
         for (Friend friend : friendList) {
             FriendDetails friendDetails = new FriendDetails();
-            User user = iUserRepository.findById(friend.getUserId()).get();
-            friendDetails.setProfileImage(user.getProfileImage());
-            friendDetails.setUserId(user.getUserId());
-            friendDetails.setUserName(user.getUserName());
-            friendDetailsList.add(friendDetails);
+            try{
+                User user = iUserRepository.findById(friend.getUserId()).get();
+                friendDetails.setProfileImage(user.getProfileImage());
+                friendDetails.setUserId(user.getUserId());
+                friendDetails.setUserName(user.getUserName());
+                friendDetailsList.add(friendDetails);
+
+            }
+            catch (Exception e){
+                System.out.println("user not in followers");
+                return friendDetailsList;
+            }
+
+
         }
 
         return friendDetailsList;

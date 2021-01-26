@@ -20,8 +20,9 @@ import java.util.List;
 public class UserServiceImpl implements IUserService {
     @Autowired
     IUserRepository iUserRepository;
+
     @Autowired
-    KafkaTemplate kafkaTemplate;
+    KafkaTemplate<String,String> kafkaTemplate;
 
     @Autowired
     RestTemplateImpl restTemplateImpl;
@@ -38,15 +39,18 @@ public class UserServiceImpl implements IUserService {
         String userString="";
         try {
             userString = objectMapper.writeValueAsString(user);
+            System.out.println("before kafka");
+            kafkaTemplate.send("newuser",userString);
         }catch (Exception e)
         {
             System.out.println(e.toString());
         }
 
-        System.out.println("before kafka");
-        kafkaTemplate.send("newuser",userString);
+
         System.out.println("after kafka");
-        return iUserRepository.save(user);
+        System.out.println(user.getUserName());
+         iUserRepository.save(user);
+         return user;
     }
 
     @Override
