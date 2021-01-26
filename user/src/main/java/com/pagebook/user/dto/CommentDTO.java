@@ -6,7 +6,7 @@ public class CommentDTO {
 
     private int commentId; // (Pk) (Auto Generated)
     private int postId;
-    private User user;
+    private UserDTO userDTO;
     private String commentText;
 
 
@@ -26,12 +26,12 @@ public class CommentDTO {
         this.postId = postId;
     }
 
-    public User getUserDTO() {
-        return user;
+    public UserDTO getUserDTO() {
+        return userDTO;
     }
 
-    public void setUserDTO(User user) {
-        this.user = user;
+    public void setUserDTO(UserDTO userDTO) {
+        this.userDTO = userDTO;
     }
 
     public String getCommentText() {

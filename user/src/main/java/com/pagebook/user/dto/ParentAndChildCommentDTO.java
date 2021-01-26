@@ -7,7 +7,7 @@ import java.util.List;
 public class ParentAndChildCommentDTO {
     private int commentId; // (Pk) (Auto Generated)
     private int postId;
-    private User user;
+    private UserDTO userDTO;
     private String commentText;
     List<CommentDTO> comments;
 
@@ -27,12 +27,12 @@ public class ParentAndChildCommentDTO {
         this.postId = postId;
     }
 
-    public User getUser() {
-        return user;
+    public UserDTO getUserDTO() {
+        return userDTO;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserDTO(UserDTO userDTO) {
+        this.userDTO = userDTO;
     }
 
     public String getCommentText() {

@@ -1,5 +1,6 @@
 package com.pagebook.user.services.impl;
 
+import com.pagebook.user.dto.AnalyticsVFDTO;
 import com.pagebook.user.dto.RequestDetails;
 import com.pagebook.user.entity.Friend;
 import com.pagebook.user.entity.FriendRequest;
@@ -26,6 +27,9 @@ public class FriendRequestServiceImpl implements IFriendRequestService {
     @Autowired
     IFriendRequestRepository iFriendRequestRepository;
 
+    @Autowired
+    RestTemplateImpl restTemplateImpl;
+
     @Override
     public List<FriendRequest> findAll() {
         Iterable<FriendRequest> friendRequestsIterable = iFriendRequestRepository.findAll();
@@ -46,6 +50,12 @@ public class FriendRequestServiceImpl implements IFriendRequestService {
             friend.setUserId(friendRequest.getSenderId());
             friend.setFriendUserId(friendRequest.getReceiverId());
             iFriendRepository.save(friend);
+            AnalyticsVFDTO analyticsVFDTO = new AnalyticsVFDTO();
+            analyticsVFDTO.setUserId(friendRequest.getReceiverId());
+            analyticsVFDTO.setChannelId(0);
+            analyticsVFDTO.setAction("follow");
+            restTemplateImpl.sendToAnalytics(analyticsVFDTO);
+
         }
         return friendRequest;
 
@@ -65,6 +75,11 @@ public class FriendRequestServiceImpl implements IFriendRequestService {
             friend.setUserId(friendRequest.getSenderId());
             friend.setFriendUserId(friendRequest.getReceiverId());
             iFriendRepository.save(friend);
+            AnalyticsVFDTO analyticsVFDTO = new AnalyticsVFDTO();
+            analyticsVFDTO.setUserId(friendRequest.getReceiverId());
+            analyticsVFDTO.setChannelId(0);
+            analyticsVFDTO.setAction("follow");
+            restTemplateImpl.sendToAnalytics(analyticsVFDTO);
         }
         return friendRequest;
     }
