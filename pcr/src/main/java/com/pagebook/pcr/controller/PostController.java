@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping (value = "pb/post")
+//todo : /addPost and /updatePost /deletePost URN to remove from the code and just use post and put mapping instead
 public class PostController {
 
     @Autowired
@@ -24,6 +25,7 @@ public class PostController {
         return iPostServices.save(postRequestDTO);
     }
 
+    //todo : change this to putmapping
     @PostMapping(value = "/updatePost")
     Post updatePost(@RequestBody PostRequestDTO postRequestDTO)
     {
@@ -42,10 +44,10 @@ public class PostController {
         return iPostServices.findPostsByUserId(userId);
     }
 
-    @GetMapping(value = "/getPostDetails/{postId}")
-    PostDetailsDTO getPostDetails(@PathVariable("postId") int postId)
+    @GetMapping(value = "/getPostDetails/{postId}/{userId}")
+    PostDetailsDTO getPostDetails(@PathVariable("postId") int postId, @PathVariable("userId") String userId)
     {
-        return iPostServices.findByPostId(postId);
+        return iPostServices.findByPostId(postId, userId);
     }
 
     @GetMapping(value = "/getFriendPosts/{userId}")
