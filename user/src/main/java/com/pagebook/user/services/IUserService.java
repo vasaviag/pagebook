@@ -21,4 +21,6 @@ public interface IUserService {
     MyProfile getMyProfile(String userId);
 
     FriendProfile getUserProfile(String userId, String friendUserId);
+
+    boolean isExisting(String userId);
 }

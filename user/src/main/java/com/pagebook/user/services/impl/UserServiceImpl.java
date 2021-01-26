@@ -50,6 +50,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public boolean isExisting(String userId) {
+        return iUserRepository.existsById(userId);
+    }
+
+    @Override
     public List<User> findAll() {
         Iterable<User> userIterable = iUserRepository.findAll();
         List<User> userList = new ArrayList<>();

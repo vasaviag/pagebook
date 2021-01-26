@@ -1,6 +1,7 @@
 package com.pagebook.user.services.impl;
 
 import com.pagebook.user.dto.AnalyticsVFDTO;
+import com.pagebook.user.dto.CRMDTO;
 import com.pagebook.user.dto.FullUserDetail;
 import com.pagebook.user.dto.PostDetailsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,12 @@ public class RestTemplateImpl {
     {
         String uri = "http://10.177.1.164:8080/analytics";
         restTemplate.postForEntity(uri, analyticsVFDTO, null);
+    }
+
+    public void sendFollowToCRM(CRMDTO crmdto)
+    {
+        String uri = "http://10.177.2.81:8001/lead/0";
+        restTemplate.postForEntity(uri, crmdto, null);
     }
 
 }
