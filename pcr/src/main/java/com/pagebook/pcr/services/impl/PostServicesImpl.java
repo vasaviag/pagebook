@@ -2,10 +2,13 @@ package com.pagebook.pcr.services.impl;
 
 import com.pagebook.pcr.dto.*;
 import com.pagebook.pcr.entity.Post;
+import com.pagebook.pcr.entity.ReactionOnPosts;
 import com.pagebook.pcr.repository.IPostRepository;
+import com.pagebook.pcr.repository.IReactionRepository;
 import com.pagebook.pcr.services.ICommentServices;
 import com.pagebook.pcr.services.IPostServices;
 import com.pagebook.pcr.services.IReactionServices;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,7 +22,7 @@ public class PostServicesImpl implements IPostServices {
     IPostRepository iPostRepository;
 
     @Autowired
-    RestTemplate restTemplate;
+    IReactionRepository iReactionRepository;
 
     @Autowired
     IReactionServices iReactionServices;
@@ -32,8 +35,11 @@ public class PostServicesImpl implements IPostServices {
 
     public Post save(PostRequestDTO postRequestDTO)
     {
+        //todo : phani : use spring bean utils to copy content from DTO to entity
+
         postRequestDTO.setTimestamp(new Date());
         Post post = new Post();
+        //BeanUtils.copyProperties(postRequestDTO, post);
         post.setTimestamp(postRequestDTO.getTimestamp());
         post.setPostCategory(postRequestDTO.getPostCategory());
         post.setPostText(postRequestDTO.getPostText());
@@ -41,7 +47,24 @@ public class PostServicesImpl implements IPostServices {
         post.setPostUrl(postRequestDTO.getPostUrl());
         post.setSharedPostId(postRequestDTO.getSharedPostId());
         post.setUserId(postRequestDTO.getUserId());
-        return iPostRepository.save(post);
+        Post post1 = iPostRepository.save(post);
+        restTemplateImpl.sendPostDetailsToCommonInfra(post1);
+
+        AnalyticsDTO analyticsDTO = new AnalyticsDTO();
+        analyticsDTO.setPostId(post1.getPostId());
+        analyticsDTO.setAction("post");
+        analyticsDTO.setCategoryName(post.getPostCategory());
+        if(post.getPostType() == 1)
+            analyticsDTO.setType("Text");
+        else if(post.getPostType() == 2)
+            analyticsDTO.setType("Image");
+        else
+            analyticsDTO.setType("Video");
+        analyticsDTO.setChannelId(0);
+        analyticsDTO.setTimeStamp(post.getTimestamp());
+        restTemplateImpl.sendToAnalytics(analyticsDTO);
+
+        return post1;
     }
 
     public void deleteById(int id)
@@ -61,14 +84,23 @@ public class PostServicesImpl implements IPostServices {
         List<PostDetailsDTO> postDetailsDTOS = new ArrayList<>();
         for (Post post : postsIterable)
         {
-            postDetailsDTOS.add(findByPostId(post.getPostId()));
+            postDetailsDTOS.add(findByPostId(post.getPostId(), id));
         }
         return postDetailsDTOS;
     }
 
-    public PostDetailsDTO findByPostId(int postId)
+    public PostDetailsDTO findByPostId(int postId, String userId)
     {
-        Post post = iPostRepository.findByPostId(postId);
+        Post post = iPostRepository.findById(postId).get();
+
+        ReactionOnPosts reactionOnPosts = iReactionRepository.findByPostIdAndUserId(postId, userId);
+        if(reactionOnPosts == null)
+        {
+            reactionOnPosts = new ReactionOnPosts();
+            reactionOnPosts.setReactionType(-1);
+        }
+        System.out.println("kkkkk "+reactionOnPosts.getReactionType());
+
         UserDTO userDTO = restTemplateImpl.getUserDetails(post.getUserId());
         PostDTO postDTO = new PostDTO();
         postDTO.setPostId(post.getPostId());
@@ -87,12 +119,15 @@ public class PostServicesImpl implements IPostServices {
         postDetailsDTO.setPostDTO(postDTO);
         postDetailsDTO.setReactionsDTOS(reactionsDTOS);
         postDetailsDTO.setTimestamp(post.getTimestamp());
+        postDetailsDTO.setReactionType(reactionOnPosts.getReactionType());
         return postDetailsDTO;
     }
 
     public List<PostDetailsDTO> findFriendPosts(String id)
     {
+        System.out.println("before rest call");
         List<UserDTO> userDTOS = restTemplateImpl.getFriendsDetails(id);
+        System.out.println("after rest call");
 
         List<PostDetailsDTO> postDetailsDTOS = new ArrayList<>();
         for (UserDTO userDTO : userDTOS) {

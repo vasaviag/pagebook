@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(value = "pb/comment")
-//todo  : phani : take input as DTO and convert into entities if required to be saved or updated or deleted
 public class CommentController {
     @Autowired
     ICommentServices iCommentServices;

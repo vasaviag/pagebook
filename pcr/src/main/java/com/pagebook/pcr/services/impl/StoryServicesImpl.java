@@ -18,9 +18,6 @@ public class StoryServicesImpl implements IStoryServices {
     IStoryRepository iStoryRepository;
 
     @Autowired
-    RestTemplate restTemplate;
-
-    @Autowired
     RestTemplateImpl restTemplateImpl;
 
     public List<Story> save(StoryRequestDTO storyRequestDTO)
@@ -52,14 +49,16 @@ public class StoryServicesImpl implements IStoryServices {
     public List<Story> findStoriesByUserId(String id)
     {
         Iterable<Story> storyIterable = iStoryRepository.findByUserId(id);
+        //todo : remove the array list and use iterable
         List<Story> stories = new ArrayList<>();
         storyIterable.forEach(stories::add);
         for (Story story : stories)
         {
             Date currDate = new Date();
             if(currDate.compareTo(story.getTimestamp()) > 0) {
-                stories.remove(story);
                 deleteById(story.getStoryId());
+                stories.remove(story);
+
             }
         }
         return stories;
@@ -75,9 +74,14 @@ public class StoryServicesImpl implements IStoryServices {
 
     public List<StoryDTO> findFriendStories(String id)
     {
-        List<UserDTO> userDTOS = restTemplateImpl.getFriendsDetails(id);
+
+        List<UserDTO> userDTOS = new ArrayList<>();
+        userDTOS.add(restTemplateImpl.getUserDetails(id));
+        userDTOS.addAll(restTemplateImpl.getFriendsDetails(id));
 
         List<StoryDTO> storyDTOS = new ArrayList<>();
+
+
         for (UserDTO userDTO : userDTOS) {
             List<Story> stories = findStoriesByUserId(userDTO.getUserId());
 
@@ -91,6 +95,8 @@ public class StoryServicesImpl implements IStoryServices {
                 storyDTOS.add(storyDTO);
             }
         }
+        //todo : use sort methods on list or colletion framework to sort based on the time stamps after collecting all stories of friends
+        System.out.println(storyDTOS.size());
 
         return storyDTOS;
     }

@@ -1,12 +1,11 @@
 package com.pagebook.pcr.services.impl;
 
-import com.pagebook.pcr.dto.CommentDTO;
-import com.pagebook.pcr.dto.CommentRequestDTO;
-import com.pagebook.pcr.dto.ParentAndChildCommentDTO;
-import com.pagebook.pcr.dto.UserDTO;
+import com.pagebook.pcr.dto.*;
 import com.pagebook.pcr.entity.Comment;
+import com.pagebook.pcr.entity.Post;
 import com.pagebook.pcr.repository.ICommentRepository;
 import com.pagebook.pcr.services.ICommentServices;
+import com.pagebook.pcr.services.IPostServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -21,10 +20,10 @@ public class CommentServicesImpl implements ICommentServices {
     ICommentRepository iCommentRepository;
 
     @Autowired
-    RestTemplate restTemplate;
+    RestTemplateImpl restTemplateImpl;
 
     @Autowired
-    RestTemplateImpl restTemplateImpl;
+    IPostServices iPostServices;
 
     public Comment save(CommentRequestDTO commentRequestDTO)
     {
@@ -34,7 +33,33 @@ public class CommentServicesImpl implements ICommentServices {
         comment.setCommentText(commentRequestDTO.getCommentText());
         comment.setParentCommentId(commentRequestDTO.getParentCommentId());
         comment.setTimestamp(new Date());
-        return iCommentRepository.save(comment);
+
+        Comment comment1 = iCommentRepository.save(comment);
+
+        CommentNotificationDTO commentNotificationDTO = new CommentNotificationDTO();
+        commentNotificationDTO.setCommentorId(commentRequestDTO.getUserId());
+        commentNotificationDTO.setCommentId(comment1.getCommentId());
+        commentNotificationDTO.setCommentText(comment1.getCommentText());
+        Post post = iPostServices.findById(comment.getPostId());
+
+        commentNotificationDTO.setPost(post);
+
+        AnalyticsDTO analyticsDTO = new AnalyticsDTO();
+        analyticsDTO.setPostId(post.getPostId());
+        analyticsDTO.setAction("comment");
+        analyticsDTO.setCategoryName(post.getPostCategory());
+        if(post.getPostType() == 1)
+            analyticsDTO.setType("Text");
+        else if(post.getPostType() == 2)
+            analyticsDTO.setType("Image");
+        else
+            analyticsDTO.setType("Video");
+        analyticsDTO.setChannelId(0);
+        analyticsDTO.setTimeStamp(post.getTimestamp());
+
+        restTemplateImpl.sendCommentDetailsToCommonInfra(commentNotificationDTO);
+
+        return comment1;
     }
 
     public void deleteById(int id)
@@ -51,11 +76,9 @@ public class CommentServicesImpl implements ICommentServices {
     {
         List<ParentAndChildCommentDTO> parentAndChildCommentDTOS = new ArrayList<>();
         Iterable<Comment> commentsIterable = iCommentRepository.findByPostIdAndParentCommentId(postId, 0);
-        //todo : remove iterable to list converstion .. use iterable to operate the logic
-        List<Comment> comments = new ArrayList<>();
-        commentsIterable.forEach(comments::add);
-        for (Comment comment: comments)
+        for (Comment comment: commentsIterable)
         {
+            System.out.println("In Comment");
             List<CommentDTO> commentDTOS = new ArrayList<>();
 
             UserDTO userDTO = restTemplateImpl.getUserDetails(comment.getUserId());
