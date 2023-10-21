@@ -20,7 +20,13 @@ public class ModeratorMapperServiceImpl implements IModeratorMapperService {
     IUserRepository iUserRepository;
     @Override
     public ModeratorMapper save(ModeratorMapper moderatorMapper) {
-        return iModeratorMapperRepository.save(moderatorMapper);
+        ModeratorMapper moderatorMappertemp = iModeratorMapperRepository.findByModeratorIdAndBusinessId(moderatorMapper.getModeratorId(),moderatorMapper.getBusinessId());
+        if(moderatorMappertemp==null) {
+            return iModeratorMapperRepository.save(moderatorMapper);
+        }
+        else{
+            return null;
+        }
     }
 
     @Override

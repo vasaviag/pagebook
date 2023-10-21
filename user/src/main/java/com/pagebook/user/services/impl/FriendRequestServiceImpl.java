@@ -1,5 +1,8 @@
 package com.pagebook.user.services.impl;
 
+import com.pagebook.user.dto.AnalyticsVFDTO;
+import com.pagebook.user.dto.CRMDTO;
+import com.pagebook.user.dto.FullUserDetail;
 import com.pagebook.user.dto.RequestDetails;
 import com.pagebook.user.entity.Friend;
 import com.pagebook.user.entity.FriendRequest;
@@ -26,6 +29,9 @@ public class FriendRequestServiceImpl implements IFriendRequestService {
     @Autowired
     IFriendRequestRepository iFriendRequestRepository;
 
+    @Autowired
+    RestTemplateImpl restTemplateImpl;
+
     @Override
     public List<FriendRequest> findAll() {
         Iterable<FriendRequest> friendRequestsIterable = iFriendRequestRepository.findAll();
@@ -46,6 +52,23 @@ public class FriendRequestServiceImpl implements IFriendRequestService {
             friend.setUserId(friendRequest.getSenderId());
             friend.setFriendUserId(friendRequest.getReceiverId());
             iFriendRepository.save(friend);
+            AnalyticsVFDTO analyticsVFDTO = new AnalyticsVFDTO();
+            analyticsVFDTO.setUserId(friendRequest.getReceiverId());
+            analyticsVFDTO.setChannelId(0);
+            analyticsVFDTO.setAction("follow");
+            restTemplateImpl.sendToAnalytics(analyticsVFDTO);
+
+            FullUserDetail fullUserDetail = restTemplateImpl.getFullUserDetail(0, iUserRepository.findById(friendRequest.getReceiverId()).get().getUserName());
+            if(fullUserDetail.getType() == 3)
+            {
+                CRMDTO crmdto = new CRMDTO();
+                crmdto.setLeadID(friendRequest.getSenderId());
+                crmdto.setLeadName(fullUserDetail.getUsername());
+                crmdto.setLeadType(1);
+                crmdto.setBusinessID(friendRequest.getReceiverId());
+                restTemplateImpl.sendFollowToCRM(crmdto);
+            }
+
         }
         return friendRequest;
 
@@ -65,6 +88,11 @@ public class FriendRequestServiceImpl implements IFriendRequestService {
             friend.setUserId(friendRequest.getSenderId());
             friend.setFriendUserId(friendRequest.getReceiverId());
             iFriendRepository.save(friend);
+            AnalyticsVFDTO analyticsVFDTO = new AnalyticsVFDTO();
+            analyticsVFDTO.setUserId(friendRequest.getReceiverId());
+            analyticsVFDTO.setChannelId(0);
+            analyticsVFDTO.setAction("follow");
+            restTemplateImpl.sendToAnalytics(analyticsVFDTO);
         }
         return friendRequest;
     }
